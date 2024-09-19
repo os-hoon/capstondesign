@@ -5,7 +5,7 @@ import lombok.*;
 
 @Entity
 @Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 public class Category extends BaseEntity {
 
