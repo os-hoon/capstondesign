@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,10 +37,17 @@ public class Post extends BaseEntity{
 
     private String content;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Participate> participates = new ArrayList<>();
+    private String category;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<PostLikes> likes = new ArrayList<>();
+    @Column(name = "detailed_category", columnDefinition = "json")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private List<String> detailed_category;
+
+//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+//    private List<Participate> participates = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+//    private List<PostLikes> likes = new ArrayList<>();
+
 
 }

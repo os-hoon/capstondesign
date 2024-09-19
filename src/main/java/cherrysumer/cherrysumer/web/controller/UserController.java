@@ -35,14 +35,14 @@ public class UserController {
 
     // 아이디 중복 확인
     @GetMapping("/id-exists")
-    public ResponseEntity<?> checkExistId(@RequestBody UserRequestDTO.existUserIdRequestDTO request) {
+    public ResponseEntity<?> checkExistId(@Valid @RequestBody UserRequestDTO.existUserIdRequestDTO request) {
         userService.findUserId(request);
         return ResponseEntity.status(HttpStatus.OK).body("사용가능한 아이디입니다.");
     }
 
     // 닉네임 중복 확인
     @GetMapping("/nickname-exists")
-    public ResponseEntity<?> checkExistNickname(@RequestBody UserRequestDTO.existUserNicknameRequestDTO request) {
+    public ResponseEntity<?> checkExistNickname(@Valid @RequestBody UserRequestDTO.existUserNicknameRequestDTO request) {
         userService.findNickname(request);
         return ResponseEntity.status(HttpStatus.OK).body("사용가능한 닉네임입니다.");
     }
