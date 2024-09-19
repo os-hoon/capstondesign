@@ -29,9 +29,15 @@ public enum ErrorCode {
     _NICKNAME_CONFLICT(HttpStatus.CONFLICT, "U409", "이미 존재하는 닉네임입니다."),
     _USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U404", "아이디 또는 비밀번호가 올바르지 않습니다."),
 
+
     //post error
-    _POST_BAD_REQUEST(HttpStatus.BAD_REQUEST, "P400", "조회할 수 있는 게시글이 없습니다.")
+    _POST_BAD_REQUEST(HttpStatus.BAD_REQUEST, "P400", "조회할 수 있는 게시글이 없습니다."),
+
+    //inventory error
+    _INVENTORY_NOT_FOUND(HttpStatus.NOT_FOUND, "I404", "재고를 찾을 수 없습니다."),
     ;
+
+
 
     private final HttpStatus status;
     private final String code;
