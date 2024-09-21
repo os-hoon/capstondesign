@@ -53,14 +53,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO.successLoginDTO userLogin(UserRequestDTO.userLoginRequestDTO request) {
-        User user = userRepository.findByLoginId(request.getLoginId())
-                .orElseThrow(() -> new UserErrorHandler(ErrorCode._LOGIN_FAILURE));
+        User user = userRepository.findUserByLoginId(request.getLoginId());
+                //.orElseThrow(() -> new UserErrorHandler(ErrorCode._USER_NOT_FOUND));
         if(checkPassword(request.getPassword(), user)) {
             String token = tokenProvider.generateJwtToken(new UserRequestDTO.userInfoDTO(user.getId()));
 
             return new UserResponseDTO.successLoginDTO(token);
         }
-        throw new UserErrorHandler(ErrorCode._LOGIN_FAILURE);
+        throw new UserErrorHandler(ErrorCode._USER_NOT_FOUND);
     }
 
     /***
