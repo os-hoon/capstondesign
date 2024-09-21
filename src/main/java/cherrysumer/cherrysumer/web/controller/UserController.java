@@ -34,15 +34,15 @@ public class UserController {
     }
 
     // 아이디 중복 확인
-    @GetMapping("/id-exists/{loginId}")
-    public ResponseEntity<?> checkExistId(@PathVariable("loginId") String loginId) {
+    @GetMapping("/id-exists")
+    public ResponseEntity<?> checkExistId(@RequestParam("loginId") String loginId) {
         userService.findUserId(loginId);
         return ResponseEntity.status(HttpStatus.OK).body("사용가능한 아이디입니다.");
     }
 
     // 닉네임 중복 확인
-    @GetMapping("/nickname-exists/{nickname}")
-    public ResponseEntity<?> checkExistNickname(@PathVariable("nickname") String nickname) {
+    @GetMapping("/nickname-exists")
+    public ResponseEntity<?> checkExistNickname(@RequestParam("nickname") String nickname) {
         userService.findNickname(nickname);
         return ResponseEntity.status(HttpStatus.OK).body("사용가능한 닉네임입니다.");
     }
@@ -55,7 +55,7 @@ public class UserController {
     }
 
     // 이메일 인증
-    @PostMapping("/email-verification/{email}")
+    @PostMapping("/email-verification")
     public ResponseEntity<?> verificationCode(@RequestBody MailRequestDTO.verificationRequestDTO request) throws NoSuchAlgorithmException {
         mailService.checkCode(request);
         return ResponseEntity.status(HttpStatus.OK).body("이메일 인증 성공");
