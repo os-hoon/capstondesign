@@ -30,7 +30,7 @@ public class PostController {
     }
 
     // 게시글 상세 조회
-    @GetMapping("/{postId}")
+    /*@GetMapping("/{postId}")
     public ResponseEntity<?> detailPost(@PathVariable("postId") Long postId) {
         return null;
     }
@@ -64,6 +64,6 @@ public class PostController {
     @PutMapping("/{postId}/likes")
     public ResponseEntity<?> addlikePost(@PathVariable("postId") Long postId) {
         return ResponseEntity.status(HttpStatus.OK).body(postService.likePost(postId));
-    }
+    }*/
 
 }
