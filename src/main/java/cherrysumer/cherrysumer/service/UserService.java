@@ -13,9 +13,9 @@ public interface UserService {
 
     void userJoin(UserRequestDTO.userJoinRequestDTO request);
 
-    void findUserId(UserRequestDTO.existUserIdRequestDTO request);
+    void findUserId(String loginId);
 
-    void findNickname(UserRequestDTO.existUserNicknameRequestDTO request);
+    void findNickname(String nickname);
 
     UserResponseDTO.successLoginDTO userLogin(UserRequestDTO.userLoginRequestDTO request);
 

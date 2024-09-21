@@ -28,34 +28,34 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body("회원가입이 성공하였습니다.");
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<UserResponseDTO.successLoginDTO> loginUser(@RequestBody UserRequestDTO.userLoginRequestDTO request) {
+    @PostMapping("/login")
+    public ResponseEntity<UserResponseDTO.successLoginDTO> loginUser(@Valid @RequestBody UserRequestDTO.userLoginRequestDTO request) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.userLogin(request));
     }
 
     // 아이디 중복 확인
-    @GetMapping("/id-exists")
-    public ResponseEntity<?> checkExistId(@Valid @RequestBody UserRequestDTO.existUserIdRequestDTO request) {
-        userService.findUserId(request);
+    @GetMapping("/id-exists/{loginId}")
+    public ResponseEntity<?> checkExistId(@PathVariable("loginId") String loginId) {
+        userService.findUserId(loginId);
         return ResponseEntity.status(HttpStatus.OK).body("사용가능한 아이디입니다.");
     }
 
     // 닉네임 중복 확인
-    @GetMapping("/nickname-exists")
-    public ResponseEntity<?> checkExistNickname(@Valid @RequestBody UserRequestDTO.existUserNicknameRequestDTO request) {
-        userService.findNickname(request);
+    @GetMapping("/nickname-exists/{nickname}")
+    public ResponseEntity<?> checkExistNickname(@PathVariable("nickname") String nickname) {
+        userService.findNickname(nickname);
         return ResponseEntity.status(HttpStatus.OK).body("사용가능한 닉네임입니다.");
     }
 
     // 이메일 인증 코드 요청
-    @PostMapping("/email-verification")
+    @GetMapping("/email-verification")
     public ResponseEntity<?> requestverificationCode(@RequestParam("email") String email) throws NoSuchAlgorithmException, MessagingException {
         mailService.sendCode(email);
         return ResponseEntity.status(HttpStatus.OK).body("인증 번호 전송 완료");
     }
 
     // 이메일 인증
-    @GetMapping("/email-verification")
+    @PostMapping("/email-verification/{email}")
     public ResponseEntity<?> verificationCode(@RequestBody MailRequestDTO.verificationRequestDTO request) throws NoSuchAlgorithmException {
         mailService.checkCode(request);
         return ResponseEntity.status(HttpStatus.OK).body("이메일 인증 성공");

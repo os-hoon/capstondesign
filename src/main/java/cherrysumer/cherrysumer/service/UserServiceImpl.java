@@ -40,26 +40,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void findUserId(UserRequestDTO.existUserIdRequestDTO request) {
-        if(userRepository.existsUserByLoginId(request.getLoginId()))
+    public void findUserId(String loginId) {
+        if(userRepository.existsUserByLoginId(loginId))
             throw new UserErrorHandler(ErrorCode._LOGINID_CONFLICT);
     }
 
     @Override
-    public void findNickname(UserRequestDTO.existUserNicknameRequestDTO request) {
-        if(userRepository.existsUserByNickname(request.getNickname()))
+    public void findNickname(String nickname) {
+        if(userRepository.existsUserByNickname(nickname))
             throw new UserErrorHandler(ErrorCode._NICKNAME_CONFLICT);
     }
 
     @Override
     public UserResponseDTO.successLoginDTO userLogin(UserRequestDTO.userLoginRequestDTO request) {
-        User user = userRepository.findUserByLoginId(request.getLoginId());
+        User user = userRepository.findByLoginId(request.getLoginId())
+                .orElseThrow(() -> new UserErrorHandler(ErrorCode._LOGIN_FAILURE));
         if(checkPassword(request.getPassword(), user)) {
             String token = tokenProvider.generateJwtToken(new UserRequestDTO.userInfoDTO(user.getId()));
 
             return new UserResponseDTO.successLoginDTO(token);
         }
-        throw new UserErrorHandler(ErrorCode._USER_NOT_FOUND);
+        throw new UserErrorHandler(ErrorCode._LOGIN_FAILURE);
     }
 
     /***
@@ -86,13 +87,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getLoggedInUser() {
         User user = getUser();
-        return getUser();
+        return user;
     }
 
     // 토큰에서 유저 데이터 가져오기
     private User getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userId = authentication.getName();
-        return userRepository.findUserById(Long.parseLong(userId));
+        return userRepository.findById(Long.parseLong(userId))
+                .orElseThrow(() -> new UserErrorHandler(ErrorCode._USER_NOT_FOUND));
     }
 }
