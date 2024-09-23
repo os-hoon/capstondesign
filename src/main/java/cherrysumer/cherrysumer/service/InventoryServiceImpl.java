@@ -3,6 +3,8 @@ package cherrysumer.cherrysumer.service;
 import cherrysumer.cherrysumer.domain.Category;
 import cherrysumer.cherrysumer.domain.Inventory;
 import cherrysumer.cherrysumer.domain.User;
+import cherrysumer.cherrysumer.exception.BaseException;
+import cherrysumer.cherrysumer.exception.ErrorCode;
 import cherrysumer.cherrysumer.repository.CategoryRepository;
 import cherrysumer.cherrysumer.repository.InventoryRepository;
 import cherrysumer.cherrysumer.repository.UserRepository;
@@ -33,7 +35,7 @@ public class InventoryServiceImpl implements InventoryService {
     public void insertInventory(Long userId, InventoryDTO inventoryDTO) {
         // 사용자 찾기
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
+                .orElseThrow(() -> new BaseException(ErrorCode._USER_NOT_FOUND));
 
         // 새로운 재고 생성
         Inventory inventory = new Inventory();
@@ -51,7 +53,7 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public void editInventory(Long id, InventoryDTO inventoryDTO) {
         Inventory inventory = inventoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 재고가 없습니다."));
+                .orElseThrow(() -> new BaseException(ErrorCode._INVENTORY_NOT_FOUND));
 
         inventory.setProductName(inventoryDTO.getProductName());
         inventory.setExpiration_date(inventoryDTO.getExpirationDate());
@@ -67,17 +69,20 @@ public class InventoryServiceImpl implements InventoryService {
     public void deleteInventory(Long id) {
         // 1. Inventory 찾기
         Inventory inventory = inventoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 재고를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BaseException(ErrorCode._INVENTORY_NOT_FOUND));
 
         // 2. Inventory에 연결된 카테고리 ID들 가져오기
-        List<Long> categoryIds = inventory.getCategory();
+        if (inventory.getCategory() != null){
+            List<Long> categoryIds = inventory.getCategory();
 
-        // 3. 각 카테고리를 삭제
-        categoryIds.forEach(categoryId -> {
-            Category category = categoryRepository.findById(categoryId)
-                    .orElseThrow(() -> new IllegalArgumentException("카테고리를 찾을 수 없습니다."));
-            categoryRepository.delete(category);
-        });
+            // 3. 각 카테고리를 삭제
+            categoryIds.forEach(categoryId -> {
+                Category category = categoryRepository.findById(categoryId)
+                        .orElseThrow(() -> new BaseException(ErrorCode._CATEGORY_NOT_FOUND));
+                categoryRepository.delete(category);
+            });
+
+        }
 
         // 4. Inventory 삭제
         inventoryRepository.delete(inventory);
@@ -92,7 +97,7 @@ public class InventoryServiceImpl implements InventoryService {
     public void addCategoryToInventory(Long inventoryId, String categoryName) {
         // 1. 해당 Inventory 찾기
         Inventory inventory = inventoryRepository.findById(inventoryId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 재고를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BaseException(ErrorCode._INVENTORY_NOT_FOUND));
 
         // 2. Inventory의 카테고리 리스트가 null인지 확인하고 초기화
         if (inventory.getCategory() == null) {
@@ -113,7 +118,7 @@ public class InventoryServiceImpl implements InventoryService {
             inventory.getCategory().add(category.getId());
             inventoryRepository.save(inventory);
         } else {
-            throw new IllegalArgumentException("해당 재고에 이미 같은 이름의 카테고리가 존재합니다.");
+            throw new BaseException(ErrorCode._CATEGORY_DUPLICATE);
         }
     }
 
@@ -122,7 +127,7 @@ public class InventoryServiceImpl implements InventoryService {
     public void removeCategoryFromInventory(Long inventoryId, String categoryName) {
         // 1. 해당 Inventory 찾기
         Inventory inventory = inventoryRepository.findById(inventoryId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 재고를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BaseException(ErrorCode._INVENTORY_NOT_FOUND));
 
         // 2. Inventory의 카테고리 리스트에서 해당 카테고리 이름이 있는지 확인
         boolean categoryExistsInInventory = inventory.getCategory().stream()
@@ -131,7 +136,7 @@ public class InventoryServiceImpl implements InventoryService {
 
         // 3. 해당 Inventory에 카테고리가 없으면 예외 발생
         if (!categoryExistsInInventory) {
-            throw new IllegalArgumentException("해당 재고에 존재하지 않는 카테고리입니다: " + categoryName);
+            throw new BaseException(ErrorCode._CATEGORY_NOT_IN_INVENTORY);
         }
 
         // 4. Inventory의 카테고리 리스트에서 해당 카테고리 ID를 제외
@@ -145,7 +150,7 @@ public class InventoryServiceImpl implements InventoryService {
 
         // 5. 다른 Inventory에서 해당 카테고리가 사용되고 있는지 확인
         Category category = categoryRepository.findByName(categoryName)
-                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BaseException(ErrorCode._CATEGORY_NOT_FOUND));
 
         boolean isCategoryUsedInOtherInventories = inventoryRepository.findAll().stream()
                 .anyMatch(inv -> inv.getCategory().contains(category.getId()));

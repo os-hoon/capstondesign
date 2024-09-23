@@ -26,6 +26,7 @@ public class Inventory extends BaseEntity{
     @JsonIgnore  // 이 줄을 추가하여 User 정보가 JSON에 포함되지 않도록 설정
     private User user;
 
+    @Column(nullable = false)
     private String productName;
 
     private LocalDateTime expiration_date;

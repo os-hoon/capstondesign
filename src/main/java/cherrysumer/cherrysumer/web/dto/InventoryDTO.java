@@ -1,20 +1,29 @@
 package cherrysumer.cherrysumer.web.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class InventoryDTO {
-    private Long id;
+
+    @NotEmpty(message = "재고이름을 입력하세요.")
     private String productName;
+
     private LocalDateTime expirationDate;
+
     private int quantity;
+
     private String stockLocation;
+
     private List<Long> category;
+
     private List<String> detailedCategory;
+
 }

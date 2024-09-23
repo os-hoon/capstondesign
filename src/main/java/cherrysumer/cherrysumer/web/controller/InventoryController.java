@@ -3,6 +3,7 @@ package cherrysumer.cherrysumer.web.controller;
 import cherrysumer.cherrysumer.domain.Inventory;
 import cherrysumer.cherrysumer.service.InventoryService;
 import cherrysumer.cherrysumer.web.dto.InventoryDTO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,7 +29,7 @@ public class InventoryController {
 
     // 재고 추가
     @PostMapping("/insert")
-    public ResponseEntity<?> insertInventory(@AuthenticationPrincipal User user, @RequestBody InventoryDTO inventoryDTO) {
+    public ResponseEntity<?> insertInventory(@AuthenticationPrincipal User user, @RequestBody @Valid InventoryDTO inventoryDTO) {
         Long userId = Long.parseLong(user.getUsername());
         inventoryService.insertInventory(userId, inventoryDTO);
         return ResponseEntity.ok("재고가 성공적으로 추가되었습니다.");
@@ -36,7 +37,7 @@ public class InventoryController {
 
     // 재고 수정
     @PostMapping("/edit/{id}")
-    public ResponseEntity<?> editInventory(@PathVariable Long id, @RequestBody InventoryDTO inventoryDTO) {
+    public ResponseEntity<?> editInventory(@PathVariable Long id, @RequestBody @Valid InventoryDTO inventoryDTO) {
         inventoryService.editInventory(id, inventoryDTO);
         return ResponseEntity.ok("재고가 성공적으로 수정되었습니다.");
     }
