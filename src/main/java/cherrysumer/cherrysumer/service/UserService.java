@@ -20,4 +20,10 @@ public interface UserService {
     UserResponseDTO.successLoginDTO userLogin(UserRequestDTO.userLoginRequestDTO request);
 
     User getLoggedInUser();
+
+    UserResponseDTO.userLoginIdDTO findLoginId(String email);
+
+    void findUserPw(UserRequestDTO.findPwDTO request);
+
+    void changePw(UserRequestDTO.changePwDTO request);
 }

@@ -65,4 +65,25 @@ public class UserRequestDTO {
     public static class userInfoDTO {
         private Long id;
     }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class findPwDTO {
+        @NotEmpty(message = "아이디를 입력하세요.")
+        String loginId;
+        @NotEmpty(message = "이름을 입력하세요.")
+        String name;
+        @NotEmpty(message = "이메일을 입력하세요.")
+        String email;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class changePwDTO {
+        String loginId;
+        @NotEmpty(message = "변경할 비밀번호를 입력하세요.")
+        String pasawd;
+    }
 }

@@ -1,5 +1,6 @@
 package cherrysumer.cherrysumer.exception;
 
+import cherrysumer.cherrysumer.util.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -56,11 +57,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = BaseException.class)
     public ResponseEntity onThrowException(BaseException baseException, HttpServletRequest request) {
         ErrorCode code = baseException.getErrorCode();
-        ErrorResponse reason = ErrorResponse.of(code);
-        return handleExceptionInternal(baseException,reason,code,null,request);
+        ApiResponse<Object> body = ApiResponse.onFailure(code, null);
+        return handleExceptionInternal(baseException,body,code,null,request);
     }
 
-    private ResponseEntity<Object> handleExceptionInternal(Exception e, ErrorResponse reason, ErrorCode code,
+    private ResponseEntity<Object> handleExceptionInternal(Exception e, ApiResponse reason, ErrorCode code,
                                                            HttpHeaders headers, HttpServletRequest request) {
 
 //        e.printStackTrace();
@@ -77,8 +78,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private ResponseEntity<Object> handleExceptionInternalFalse(Exception e, ErrorCode errorCommonStatus,
                                                                 HttpHeaders headers, HttpStatus status, WebRequest request, String errorPoint) {
-        ErrorResponse body = ErrorResponse.of(errorCommonStatus);
-
+        ApiResponse<Object> body = ApiResponse.onFailure(errorCommonStatus, null);
         return super.handleExceptionInternal(
                 e,
                 body,
@@ -90,8 +90,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private ResponseEntity<Object> handleExceptionInternalArgs(Exception e, HttpHeaders headers, ErrorCode errorCommonStatus,
                                                                WebRequest request, String message) {
-        ErrorResponse body = ErrorResponse.of(errorCommonStatus, message);
-
+        ApiResponse<Object> body = ApiResponse.onFailure(errorCommonStatus, message);
         return super.handleExceptionInternal(
                 e,
                 body,
@@ -103,8 +102,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private ResponseEntity<Object> handleExceptionInternalConstraint(Exception e, ErrorCode errorCommonStatus,
                                                                      HttpHeaders headers, WebRequest request) {
-        ErrorResponse body = ErrorResponse.of(errorCommonStatus);
-
+        ApiResponse<Object> body = ApiResponse.onFailure(errorCommonStatus, null);
         return super.handleExceptionInternal(
                 e,
                 body,

@@ -1,7 +1,7 @@
 package cherrysumer.cherrysumer.util.jwt;
 
 import cherrysumer.cherrysumer.exception.ErrorCode;
-import cherrysumer.cherrysumer.exception.ErrorResponse;
+import cherrysumer.cherrysumer.util.ApiResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,8 +16,7 @@ import java.io.IOException;
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        ErrorResponse error = new ErrorResponse(ErrorCode._BAD_REQUEST);
-
+        ApiResponse<Object> error = ApiResponse.onFailure(ErrorCode._BAD_REQUEST, null);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonErrorResponse = objectMapper.writeValueAsString(error);
 

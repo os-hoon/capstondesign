@@ -73,4 +73,22 @@ public class PostResponseDTO {
         private Long postId;
         private int isConfirmed;
     }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class likePostDTO {
+        private Long postId;
+        private boolean status;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class participateUserDTO {
+        private Long userId;
+        private Long postId;
+        private String region;
+        private int isConfirmed;
+    }
 }

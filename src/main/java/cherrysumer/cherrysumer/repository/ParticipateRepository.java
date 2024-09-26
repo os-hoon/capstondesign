@@ -20,4 +20,6 @@ public interface ParticipateRepository extends JpaRepository<Participate, Long> 
     //List<Post> findAllByUser(@Param("u") User user);
 
     List<Participate> findAllByUser(User user);
+
+    List<Participate> findAllByPost(Post post);
 }

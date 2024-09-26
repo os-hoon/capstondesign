@@ -11,7 +11,9 @@ public interface PostService {
 
     List<PostResponseDTO.postDTO> findPlacePosts();
 
-    List<PostResponseDTO.recruitDTO> findRecruitList();
+    void deletePost(Long postId);
 
-    List<PostResponseDTO.applicationDTO> findApplicationList();
+    PostResponseDTO.successPostDTO participatePost(Long postId);
+
+    PostResponseDTO.likePostDTO likePost(Long postId);
 }

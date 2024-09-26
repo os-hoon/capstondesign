@@ -1,7 +1,7 @@
 package cherrysumer.cherrysumer.util.jwt;
 
 import cherrysumer.cherrysumer.exception.ErrorCode;
-import cherrysumer.cherrysumer.exception.ErrorResponse;
+import cherrysumer.cherrysumer.util.ApiResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -37,7 +37,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     }
 
     private void setResponse(HttpServletResponse response, ErrorCode errorCode) throws RuntimeException, IOException {
-        ErrorResponse error = new ErrorResponse(errorCode);
+        ApiResponse<Object> error = ApiResponse.onFailure(errorCode, null);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonErrorResponse = objectMapper.writeValueAsString(error);
 

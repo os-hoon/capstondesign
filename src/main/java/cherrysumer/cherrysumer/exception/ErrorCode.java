@@ -25,13 +25,17 @@ public enum ErrorCode {
     _MAIL_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "M401", "인증 시간이 만료되었습니다. 다시 인증을 요청해 주세요."),
 
     //user error
+    _LOGIN_FAILURE(HttpStatus.UNAUTHORIZED, "U401", "아이디 또는 비밀번호가 올바르지 않습니다."),
     _LOGINID_CONFLICT(HttpStatus.CONFLICT, "U409", "이미 존재하는 아이디입니다."),
     _NICKNAME_CONFLICT(HttpStatus.CONFLICT, "U409", "이미 존재하는 닉네임입니다."),
-    _USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U404", "아이디 또는 비밀번호가 올바르지 않습니다."),
+    _USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U404", "사용자를 찾을 수 없습니다."),
 
 
     //post error
     _POST_BAD_REQUEST(HttpStatus.BAD_REQUEST, "P400", "조회할 수 있는 게시글이 없습니다."),
+    _POST_NOT_FOUND(HttpStatus.NOT_FOUND, "P404", "게시글이 존재하지 않습니다."),
+    _POST_FORBIDDEN(HttpStatus.FORBIDDEN, "P403", "해당 게시글의 권한이 없습니다."),
+    _POST_NOT_PARTICIPATE(HttpStatus.BAD_REQUEST, "P400", "자신의 공구에는 참여할 수 없습니다."),
 
     //inventory error
     _INVENTORY_NOT_FOUND(HttpStatus.NOT_FOUND, "I404", "재고를 찾을 수 없습니다."),

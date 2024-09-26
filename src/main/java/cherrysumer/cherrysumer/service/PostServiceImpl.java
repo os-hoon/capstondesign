@@ -2,6 +2,7 @@ package cherrysumer.cherrysumer.service;
 
 import cherrysumer.cherrysumer.domain.Participate;
 import cherrysumer.cherrysumer.domain.Post;
+import cherrysumer.cherrysumer.domain.PostLikes;
 import cherrysumer.cherrysumer.domain.User;
 import cherrysumer.cherrysumer.exception.ErrorCode;
 import cherrysumer.cherrysumer.exception.handler.PostErrorHandler;
@@ -46,6 +47,7 @@ public class PostServiceImpl implements PostService{
         post.setPlace(request.getPlace());
         post.setDetailed_category(request.getDetailed_category());
         post.setContent(request.getContent());
+        post.setRegion(user.getRegion());
 
         return postRepository.save(post);
     }
@@ -58,7 +60,7 @@ public class PostServiceImpl implements PostService{
 
     private List<PostResponseDTO.postDTO> getPlacePosts() {
         User user = userService.getLoggedInUser();
-        List<Post> posts = postRepository.findByPlace(user.getRegion());
+        List<Post> posts = postRepository.findByRegion(user.getRegion());
         if(posts.isEmpty())
             throw new PostErrorHandler(ErrorCode._POST_BAD_REQUEST);
 
@@ -69,65 +71,90 @@ public class PostServiceImpl implements PostService{
         return list;
     }
 
-    // 모집 게시글 조회
+    // 게시글 삭제
     @Override
-    public List<PostResponseDTO.recruitDTO> findRecruitList() {
-        return getRecruitPosts();
+    public void deletePost(Long postId) {
+        delete(postId);
     }
 
-    private List<PostResponseDTO.recruitDTO> getRecruitPosts() {
+    private void delete(Long postId) {
         User user = userService.getLoggedInUser();
-        List<Post> posts = postRepository.findByUser(user);
-        if(posts.isEmpty())
-            throw new PostErrorHandler(ErrorCode._POST_BAD_REQUEST);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostErrorHandler(ErrorCode._POST_NOT_FOUND));
 
-        List<PostResponseDTO.recruitDTO> list = posts.stream()
-                .map((Post p) -> convertRecruitPost(p))
-                .collect(Collectors.toList());
-
-        return list;
-
+        if(post.getUser().equals(user)) {
+            postRepository.delete(post);
+        } else
+            throw new PostErrorHandler(ErrorCode._POST_FORBIDDEN);
     }
 
-    // 참여 신청 게시글 조회
+    // 공구 참여 신청
     @Override
-    public List<PostResponseDTO.applicationDTO> findApplicationList() {
-        return getApplicationPosts();
+    public PostResponseDTO.successPostDTO participatePost(Long postId) {
+        Post post = participate(postId);
+        return new PostResponseDTO.successPostDTO(post);
     }
 
-    private List<PostResponseDTO.applicationDTO> getApplicationPosts() {
+    private Post participate(Long postId) {
         User user = userService.getLoggedInUser();
-        List<Participate> participates = participateRepository.findAllByUser(user);
-        if(participates.isEmpty())
-            throw new PostErrorHandler(ErrorCode._POST_BAD_REQUEST);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostErrorHandler(ErrorCode._POST_NOT_FOUND));
 
-        List<PostResponseDTO.applicationDTO> list = participates.stream()
-                .map((Participate p) -> convertApplicationPost(p))
-                .collect(Collectors.toList());
+        if(post.getUser().equals(user)) {
+            throw new PostErrorHandler(ErrorCode._POST_NOT_PARTICIPATE);
+        }
 
-        return list;
+        Participate p = new Participate();
+        p.setUser(user);
+        p.setPost(post);
+        p.setStatus(2);
+        participateRepository.save(p);
+
+        return post;
+    }
+
+    // 게시글 관심 목록 추가, 삭제
+    @Override
+    public PostResponseDTO.likePostDTO likePost(Long postId) {
+        PostLikes like = likes(postId);
+        return new PostResponseDTO.likePostDTO(postId, like.isStatus());
+    }
+
+    private PostLikes likes(Long postId) {
+        User user = userService.getLoggedInUser();
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostErrorHandler(ErrorCode._POST_NOT_FOUND));
+
+        PostLikes like;
+        if(likesRepository.existsByPostAndUser(post, user)) {
+            like = likesRepository.findByPostAndUser(post,user);
+            like.setStatus(!like.isStatus());
+            likesRepository.save(like);
+        } else {
+            like = new PostLikes();
+            like.setPost(post);
+            like.setUser(user);
+            like.setStatus(true);
+        }
+
+        likesRepository.save(like);
+        return like;
     }
 
     // post 응답 객체 변환
     private PostResponseDTO.postDTO convertPost(Post p, User user) {
         int likes = Integer.parseInt(String.valueOf(likesRepository.countByPost(p)));
-        boolean status = likesRepository.existsByPostAndUser(p, user);
+        boolean status;
+
+        if(likesRepository.existsByPostAndUser(p, user)) {
+            status = likesRepository.findByPostAndUser(p, user).isStatus();
+        } else {
+            status = false;
+        }
+
         String upload = TimeUtil.convertTime(p.getUpdatedAt());
         PostResponseDTO.postDTO post = new PostResponseDTO.postDTO(p, likes, status, upload);
 
-        return post;
-    }
-
-    private PostResponseDTO.recruitDTO convertRecruitPost(Post p) {
-        int number = Integer.parseInt(String.valueOf(participateRepository.countAllByPost(p)));
-
-        PostResponseDTO.recruitDTO post = new PostResponseDTO.recruitDTO(p.getTitle(), number, p.getId());
-        return post;
-    }
-
-    private PostResponseDTO.applicationDTO convertApplicationPost(Participate p) {
-        PostResponseDTO.applicationDTO post =
-                new PostResponseDTO.applicationDTO(p.getPost().getTitle(), p.getPost().getId(), p.getStatus());
         return post;
     }
 }

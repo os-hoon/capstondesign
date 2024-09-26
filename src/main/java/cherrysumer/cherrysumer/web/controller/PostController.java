@@ -2,6 +2,7 @@ package cherrysumer.cherrysumer.web.controller;
 
 
 import cherrysumer.cherrysumer.service.PostService;
+import cherrysumer.cherrysumer.util.ApiResponse;
 import cherrysumer.cherrysumer.web.dto.PostRequestDTO;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -19,14 +20,14 @@ public class PostController {
 
     // 공구 게시글 조회
     @GetMapping("")
-    public ResponseEntity<?> inquiryPosts() {
-        return ResponseEntity.status(HttpStatus.OK).body(postService.findPlacePosts());
+    public ApiResponse<?> inquiryPosts() {
+        return ApiResponse.onSuccess(postService.findPlacePosts());
     }
 
     // 공구 게시글 작성
     @PostMapping("")
-    public ResponseEntity<?> createPost(@Valid @RequestBody PostRequestDTO.addPostDTO request) {
-        return ResponseEntity.status(HttpStatus.OK).body(postService.savePost(request));
+    public ApiResponse<?> createPost(@Valid @RequestBody PostRequestDTO.addPostDTO request) {
+        return ApiResponse.onSuccess(postService.savePost(request));
     }
 
     // 게시글 상세 조회

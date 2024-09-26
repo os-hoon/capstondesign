@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    List<Post> findByPlace(String place);
+    List<Post> findByRegion(String region);
     List<Post> findByUser(User user);
 }

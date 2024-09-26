@@ -1,7 +1,9 @@
 package cherrysumer.cherrysumer.web.controller;
 
+import cherrysumer.cherrysumer.domain.User;
 import cherrysumer.cherrysumer.service.MailService;
 import cherrysumer.cherrysumer.service.UserService;
+import cherrysumer.cherrysumer.util.ApiResponse;
 import cherrysumer.cherrysumer.web.dto.MailRequestDTO;
 import cherrysumer.cherrysumer.web.dto.UserRequestDTO;
 import cherrysumer.cherrysumer.web.dto.UserResponseDTO;
@@ -23,47 +25,60 @@ public class UserController {
     private final MailService mailService;
 
     @PostMapping("/join")
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserRequestDTO.userJoinRequestDTO request) {
+    public ApiResponse<?> createUser(@Valid @RequestBody UserRequestDTO.userJoinRequestDTO request) {
         userService.userJoin(request);
-        return ResponseEntity.status(HttpStatus.OK).body("회원가입이 성공하였습니다.");
+        return ApiResponse.onSuccess("회원가입이 성공하였습니다.");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponseDTO.successLoginDTO> loginUser(@Valid @RequestBody UserRequestDTO.userLoginRequestDTO request) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.userLogin(request));
+    public ApiResponse<UserResponseDTO.successLoginDTO> loginUser(@Valid @RequestBody UserRequestDTO.userLoginRequestDTO request) {
+        return ApiResponse.onSuccess(userService.userLogin(request));
     }
 
     // 아이디 중복 확인
     @GetMapping("/id-exists")
-    public ResponseEntity<?> checkExistId(@RequestParam("loginId") String loginId) {
+    public ApiResponse<?> checkExistId(@RequestParam("loginId") String loginId) {
         userService.findUserId(loginId);
-        return ResponseEntity.status(HttpStatus.OK).body("사용가능한 아이디입니다.");
+        return ApiResponse.onSuccess("사용가능한 아이디입니다.");
     }
 
     // 닉네임 중복 확인
     @GetMapping("/nickname-exists")
-    public ResponseEntity<?> checkExistNickname(@RequestParam("nickname") String nickname) {
+    public ApiResponse<?> checkExistNickname(@RequestParam("nickname") String nickname) {
         userService.findNickname(nickname);
-        return ResponseEntity.status(HttpStatus.OK).body("사용가능한 닉네임입니다.");
+        return ApiResponse.onSuccess("사용가능한 닉네임입니다.");
     }
 
     // 이메일 인증 코드 요청
     @GetMapping("/email-verification")
-    public ResponseEntity<?> requestverificationCode(@RequestParam("email") String email) throws NoSuchAlgorithmException, MessagingException {
+    public ApiResponse<?> requestverificationCode(@RequestParam("email") String email) throws NoSuchAlgorithmException, MessagingException {
         mailService.sendCode(email);
-        return ResponseEntity.status(HttpStatus.OK).body("인증 번호 전송 완료");
+        return ApiResponse.onSuccess("인증 번호 전송 완료");
     }
 
     // 이메일 인증
     @PostMapping("/email-verification")
-    public ResponseEntity<?> verificationCode(@RequestBody MailRequestDTO.verificationRequestDTO request) throws NoSuchAlgorithmException {
+    public ApiResponse<?> verificationCode(@Valid @RequestBody MailRequestDTO.verificationRequestDTO request) throws NoSuchAlgorithmException {
         mailService.checkCode(request);
-        return ResponseEntity.status(HttpStatus.OK).body("이메일 인증 성공");
+        return ApiResponse.onSuccess("이메일 인증 성공");
     }
 
-    // jwt 인증 테스트
-    @GetMapping("/jwt-test")
-    public ResponseEntity<?> jwtTest() {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getLoggedInUser().getNickname());
+    // 아이디 찾기
+    @GetMapping("/findId")
+    public ApiResponse<?> findId(@RequestParam("email") String email) {
+        return ApiResponse.onSuccess(userService.findLoginId(email));
+    }
+
+    // 비밀번호 찾기
+    @PostMapping("/findPwd")
+    public ApiResponse<?> findPw(@Valid @RequestBody UserRequestDTO.findPwDTO request) {
+        userService.findUserPw(request);
+        return ApiResponse.onSuccess("인증이 완료되었습니다.");
+    }
+    // 비밀번호 찾기 -> 비밀번호 변경
+    @PostMapping("/changePwd")
+    public ApiResponse<?> changePw(@Valid @RequestBody UserRequestDTO.changePwDTO request) {
+        userService.changePw(request);
+        return ApiResponse.onSuccess("비밀번호가 변경되었습니다.");
     }
 }

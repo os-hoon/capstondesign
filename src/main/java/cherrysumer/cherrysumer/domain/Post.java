@@ -43,11 +43,7 @@ public class Post extends BaseEntity{
     @JdbcTypeCode(SqlTypes.JSON)
     private List<String> detailed_category;
 
-//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-//    private List<Participate> participates = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-//    private List<PostLikes> likes = new ArrayList<>();
+    private String region;
 
 
 }

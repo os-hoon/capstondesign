@@ -22,5 +22,5 @@ public class PostLikes extends BaseEntity{
     @JoinColumn(name = "post_id")
     private Post post;
 
-    private int status;
+    private boolean status;
 }

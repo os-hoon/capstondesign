@@ -22,5 +22,6 @@ public class Participate extends BaseEntity{
     @JoinColumn(name = "post_id")
     private Post post;
 
+    // 0 : 승인, 1 : 거절, 2 : 미확인
     private int status;
 }

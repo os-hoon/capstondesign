@@ -24,8 +24,7 @@ public class SecurityConfig {
     private final JwtExceptionFilter jwtExceptionFilter;
 
     private static final String[] permitRequest = {
-            "/user/join", "/user/id-exists", "/user/nickname-exists",
-            "/user/email-verification", "/user/login",
+            "/user/**",
             "/inventory/**"  // 재고 조회 관련 요청 허용
     };
 

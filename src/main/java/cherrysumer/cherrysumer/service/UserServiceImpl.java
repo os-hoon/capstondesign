@@ -53,14 +53,64 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO.successLoginDTO userLogin(UserRequestDTO.userLoginRequestDTO request) {
-        User user = userRepository.findUserByLoginId(request.getLoginId());
-                //.orElseThrow(() -> new UserErrorHandler(ErrorCode._USER_NOT_FOUND));
+        User user = userRepository.findByLoginId(request.getLoginId())
+                .orElseThrow(() -> new UserErrorHandler(ErrorCode._LOGIN_FAILURE));
         if(checkPassword(request.getPassword(), user)) {
             String token = tokenProvider.generateJwtToken(new UserRequestDTO.userInfoDTO(user.getId()));
 
-            return new UserResponseDTO.successLoginDTO(token);
+            return new UserResponseDTO.successLoginDTO(token, user.getRegion(), user.getName());
         }
-        throw new UserErrorHandler(ErrorCode._USER_NOT_FOUND);
+        throw new UserErrorHandler(ErrorCode._LOGIN_FAILURE);
+    }
+
+    // 아이디 찾기
+    @Override
+    public UserResponseDTO.userLoginIdDTO findLoginId(String email) {
+        return findUserLoginId(email);
+    }
+
+    private UserResponseDTO.userLoginIdDTO findUserLoginId(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserErrorHandler(ErrorCode._MAIL_NOT_FOUND));
+
+        return new UserResponseDTO.userLoginIdDTO(user.getLoginId());
+    }
+
+    // 사용자 인증
+    @Override
+    public void findUserPw(UserRequestDTO.findPwDTO request) {
+        if(!findPw(request))
+            throw new UserErrorHandler(ErrorCode._USER_NOT_FOUND);
+    }
+
+    private boolean findPw(UserRequestDTO.findPwDTO request) {
+        User idUser = userRepository.findByLoginId(request.getLoginId())
+                .orElseThrow(() -> new UserErrorHandler(ErrorCode._USER_NOT_FOUND));
+
+        User emailUser = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UserErrorHandler(ErrorCode._USER_NOT_FOUND));
+
+        if(idUser.equals(emailUser)) {
+            if(idUser.getName().equals(request.getName()) && emailUser.getName().equals(request.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // 비밀번호 변경
+    @Override
+    public void changePw(UserRequestDTO.changePwDTO request) {
+        changePasswd(request);
+    }
+
+    private void changePasswd(UserRequestDTO.changePwDTO request) {
+        User user = userRepository.findByLoginId(request.getLoginId())
+                .orElseThrow(() -> new UserErrorHandler(ErrorCode._USER_NOT_FOUND));
+
+        String pwd = hashPassword(request.getPasawd());
+        user.setPasswd(pwd);
+        userRepository.save(user);
     }
 
     /***
