@@ -9,6 +9,7 @@ import cherrysumer.cherrysumer.web.dto.ProfileDTO;
 import cherrysumer.cherrysumer.web.dto.RegionDTO;
 
 import cherrysumer.cherrysumer.service.ParticipateService;
+import cherrysumer.cherrysumer.web.dto.UserRequestDTO;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,7 @@ public class MyPageController {
     public ApiResponse<?> applicationList(@PathVariable(name = "status") int status) {
         // 0 = 모집, 1 = 참여
        if(status == 0) {
-            return ApiResponse.onSuccess(participateService.findRecruitList());
+            return ApiResponse.onSuccess(postService.findRecruitList());
         } else if(status == 1) {
             return ApiResponse.onSuccess(participateService.findApplicationList());
         } else
@@ -70,25 +71,27 @@ public class MyPageController {
 
     // 참여 신청자 목록 조회
     @GetMapping("/participations/{postId}")
-    public ApiResponse<?> participateList(@PathVariable(name = "postId") Long postId) {
-        return ApiResponse.onSuccess(participateService.participateList(postId));
+    public ApiResponse<?> participateList(@PathVariable(name = "postId") Long postId,
+                                          @RequestParam(name = "sorted") int sorted) {
+        return ApiResponse.onSuccess(participateService.participateList(postId, sorted));
     }
 
     // 참여 신청자 승인, 거절
     @PostMapping("/participations/decide")
-    public ApiResponse<?> decideApplication() {
-        return null;
+    public ApiResponse<?> decideApplication(@RequestBody UserRequestDTO.decideUserDTO request) {
+        participateService.updateParticipate(request);
+        return ApiResponse.onSuccess("요청을 처리하였습니다.");
     }
 
     // 공구 관심 목록 조회
-    @GetMapping("/posts/liks")
+    @GetMapping("/posts/likes")
     public ApiResponse<?> likesPost() {
-        return null;
+        return ApiResponse.onSuccess(postService.postLikeList());
     }
 
     // 게시글 관리
     @GetMapping("/posts")
     public ApiResponse<?> postList() {
-        return null;
+        return ApiResponse.onSuccess(postService.postList());
     }
 }

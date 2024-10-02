@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,6 +36,10 @@ public class Post extends BaseEntity{
 
     private String place;
 
+    // 좌표
+    @Column(columnDefinition = "GEOMETRY")
+    private Point point;
+
     private String content;
 
     private String category;
@@ -43,7 +48,9 @@ public class Post extends BaseEntity{
     @JdbcTypeCode(SqlTypes.JSON)
     private List<String> detailed_category;
 
-    private String region;
+    // 동네
+    private String regionCode;
 
+    private boolean isClosed;
 
 }

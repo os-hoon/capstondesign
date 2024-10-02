@@ -8,6 +8,9 @@ import cherrysumer.cherrysumer.repository.UserRepository;
 import cherrysumer.cherrysumer.web.dto.UserRequestDTO;
 import cherrysumer.cherrysumer.web.dto.UserResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,8 +27,8 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public void userJoin(UserRequestDTO.userJoinRequestDTO request) {
-        String password = hashPassword(request.getPasswd());
+    public void userJoin(UserRequestDTO.userJoinRequestDTO request) throws ParseException {
+        String password = hashPassword(request.getPassword());
 
         User user = new User();
         user.setLoginId(request.getLoginId());
@@ -35,10 +38,25 @@ public class UserServiceImpl implements UserService {
         user.setPasswd(password);
         user.setCategory(request.getCategory());
         user.setRegion(request.getRegion());
+        user.setRegionCode(request.getRegionCode());
+        user.setPoint(convertPoint(request.getLongitude(), request.getLatitude()));
 
         userRepository.save(user);
     }
 
+    @Override
+    public Point convertPoint(String longitude, String latitude) throws ParseException {
+        if(longitude == null || longitude.equals("") || latitude == null || latitude.equals(""))
+            return null;
+
+        Double lng = Double.parseDouble(longitude);
+        Double lti = Double.parseDouble(latitude);
+
+        String pointWKT = String.format("POINT(%s %s)", lng, lti);
+        Point point = (Point) new WKTReader().read(pointWKT);
+
+        return point;
+    }
     @Override
     public void findUserId(String loginId) {
         if(userRepository.existsUserByLoginId(loginId))

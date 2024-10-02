@@ -16,7 +16,7 @@ public class UserRequestDTO {
         private String loginId;
 
         @NotEmpty(message = "비밀번호를 입력하세요.")
-        private String passwd;
+        private String password;
 
         @NotEmpty(message = "이름을 입력하세요.")
         private String name;
@@ -31,6 +31,12 @@ public class UserRequestDTO {
         private List<Long> category;
 
         private String region;
+
+        private String regionCode;
+
+        private String longitude; // 경도
+
+        private String latitude; // 위도
     }
 
     @Getter
@@ -85,5 +91,15 @@ public class UserRequestDTO {
         String loginId;
         @NotEmpty(message = "변경할 비밀번호를 입력하세요.")
         String pasawd;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class decideUserDTO {
+        Long userId;
+        Long postId;
+        //0: 승인, 1: 거절
+        int isConfirmed;
     }
 }

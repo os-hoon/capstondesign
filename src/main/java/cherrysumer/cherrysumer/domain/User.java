@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.locationtech.jts.geom.Point;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,4 +39,9 @@ public class User extends BaseEntity{
     private List<Long> category;
 
     private String region;
+
+    @Column(columnDefinition = "GEOMETRY")
+    private Point point;
+
+    private String regionCode;
 }

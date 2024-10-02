@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ParticipateRepository extends JpaRepository<Participate, Long> {
 
@@ -22,4 +23,20 @@ public interface ParticipateRepository extends JpaRepository<Participate, Long> 
     List<Participate> findAllByUser(User user);
 
     List<Participate> findAllByPost(Post post);
+
+    @Query("SELECT p FROM Participate p WHERE p.status = 0")
+    List<Participate> findAllByPost0(Post post);
+
+    @Query("SELECT p FROM Participate p WHERE p.status = 1")
+    List<Participate> findAllByPost1(Post post);
+
+    boolean existsByPostAndUser(Post post, User user);
+
+    Optional<Participate> findByPostAndUser(Post post, User user);
+
+    @Query("SELECT count(p) FROM Participate p WHERE p.status = 1")
+    Long countParticipateByPost(Post post);
+
+    @Query("SELECT p FROM Participate p WHERE p.post = :post and p.status = 2")
+    List<Participate> searchByConfirm(@Param("post") Post post);
 }

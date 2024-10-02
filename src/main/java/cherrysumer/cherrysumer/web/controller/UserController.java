@@ -11,6 +11,7 @@ import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.io.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class UserController {
     private final MailService mailService;
 
     @PostMapping("/join")
-    public ApiResponse<?> createUser(@Valid @RequestBody UserRequestDTO.userJoinRequestDTO request) {
+    public ApiResponse<?> createUser(@Valid @RequestBody UserRequestDTO.userJoinRequestDTO request) throws ParseException {
         userService.userJoin(request);
         return ApiResponse.onSuccess("회원가입이 성공하였습니다.");
     }

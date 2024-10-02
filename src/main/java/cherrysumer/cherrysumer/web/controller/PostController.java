@@ -7,6 +7,7 @@ import cherrysumer.cherrysumer.web.dto.PostRequestDTO;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.io.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,51 +21,58 @@ public class PostController {
 
     // 공구 게시글 조회
     @GetMapping("")
-    public ApiResponse<?> inquiryPosts() {
-        return ApiResponse.onSuccess(postService.findPlacePosts());
+    public ApiResponse<?> inquiryPosts(@RequestParam("sorted") int sotrted) {
+        // 0 : 최신순, 1 : 인기순
+        return ApiResponse.onSuccess(postService.findRegionPosts(sotrted));
     }
 
     // 공구 게시글 작성
     @PostMapping("")
-    public ApiResponse<?> createPost(@Valid @RequestBody PostRequestDTO.addPostDTO request) {
+    public ApiResponse<?> createPost(@Valid @RequestBody PostRequestDTO.postDTO request) throws ParseException {
         return ApiResponse.onSuccess(postService.savePost(request));
     }
 
     // 게시글 상세 조회
-    /*@GetMapping("/{postId}")
-    public ResponseEntity<?> detailPost(@PathVariable("postId") Long postId) {
-        return null;
+    @GetMapping("/{postId}")
+    public ApiResponse<?> detailPost(@PathVariable("postId") Long postId) {
+        return ApiResponse.onSuccess(postService.detailPost(postId));
     }
 
     // 게시글 삭제
     @DeleteMapping("/{postId}")
-    public ResponseEntity<?> deletePost(@PathVariable("postId") Long postId) {
+    public ApiResponse<?> deletePost(@PathVariable("postId") Long postId) {
         postService.deletePost(postId);
-        return ResponseEntity.status(HttpStatus.OK).body("해당 게시글이 삭제되었습니다.");
+        return ApiResponse.onSuccess("해당 게시글이 삭제되었습니다.");
     }
 
     // 게시글 수정
-    @PutMapping("/{postId}")
-    public ResponseEntity<?> putPost(@PathVariable("postId") Long postId) {
-        return null;
+    @PutMapping("")
+    public ApiResponse<?> updatePost(@Valid @RequestBody PostRequestDTO.postDTO request) throws ParseException {
+        return ApiResponse.onSuccess(postService.updatePost(request));
     }
 
     // 게시글 검색
     @GetMapping("/search")
-    public ResponseEntity<?> searchPost(@RequestParam("q") String q) {
-        return null;
+    public ApiResponse<?> searchPost(@RequestParam("q") String q) {
+        return ApiResponse.onSuccess(postService.searchPosts(q));
     }
 
     // 공구 참여 신청
-    @PostMapping("/{postId}/participate")
-    public ResponseEntity<?> participationPost(@PathVariable("postId") Long postId) {
-        return ResponseEntity.status(HttpStatus.OK).body(postService.participatePost(postId));
+    @PostMapping("/{postId}/application")
+    public ApiResponse<?> applicationPost(@PathVariable("postId") Long postId) {
+        return ApiResponse.onSuccess(postService.applicationPost(postId));
     }
 
     // 관심목록 추가, 제거
     @PutMapping("/{postId}/likes")
-    public ResponseEntity<?> addlikePost(@PathVariable("postId") Long postId) {
-        return ResponseEntity.status(HttpStatus.OK).body(postService.likePost(postId));
-    }*/
+    public ApiResponse<?> addlikePost(@PathVariable("postId") Long postId) {
+        return ApiResponse.onSuccess(postService.likePost(postId));
+    }
+
+    // 공구 모집 마감
+    @PutMapping("/{postId}/closed")
+    public ApiResponse<?> closePost(@PathVariable("postId") Long postId) {
+        return ApiResponse.onSuccess(postService.closePost(postId));
+    }
 
 }

@@ -29,13 +29,16 @@ public enum ErrorCode {
     _LOGINID_CONFLICT(HttpStatus.CONFLICT, "U409", "이미 존재하는 아이디입니다."),
     _NICKNAME_CONFLICT(HttpStatus.CONFLICT, "U409", "이미 존재하는 닉네임입니다."),
     _USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U404", "사용자를 찾을 수 없습니다."),
+    _PARTICIPATE_NOT_FOUND(HttpStatus.NOT_FOUND, "A404", "신청하지 않은 사용자입니다."),
+    _PARTICIPATE_CONFLICT(HttpStatus.CONFLICT, "A409", "이미 신청한 공구입니다."),
 
 
     //post error
     _POST_BAD_REQUEST(HttpStatus.BAD_REQUEST, "P400", "조회할 수 있는 게시글이 없습니다."),
     _POST_NOT_FOUND(HttpStatus.NOT_FOUND, "P404", "게시글이 존재하지 않습니다."),
     _POST_FORBIDDEN(HttpStatus.FORBIDDEN, "P403", "해당 게시글의 권한이 없습니다."),
-    _POST_NOT_PARTICIPATE(HttpStatus.BAD_REQUEST, "P400", "자신의 공구에는 참여할 수 없습니다."),
+    _POST_NOT_PARTICIPATE(HttpStatus.BAD_REQUEST, "P400", "해당 공구에 참여할 수 없습니다."),
+    _POST_CONFLICT(HttpStatus.CONFLICT, "P409", "이미 마감된 공구입니다."),
 
     //inventory error
     _INVENTORY_NOT_FOUND(HttpStatus.NOT_FOUND, "I404", "재고를 찾을 수 없습니다."),
