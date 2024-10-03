@@ -12,5 +12,4 @@ public interface InventoryService {
     void deleteInventory(Long id);
     List<Inventory> searchInventory(String query);
     void addCategoryToInventory(Long inventoryId, String categoryName);
-    void removeCategoryFromInventory(Long inventoryId, String categoryName);
 }

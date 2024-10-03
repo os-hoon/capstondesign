@@ -123,43 +123,5 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
 
-    @Override
-    public void removeCategoryFromInventory(Long inventoryId, String categoryName) {
-        // 1. 해당 Inventory 찾기
-        Inventory inventory = inventoryRepository.findById(inventoryId)
-                .orElseThrow(() -> new BaseException(ErrorCode._INVENTORY_NOT_FOUND));
-
-        // 2. Inventory의 카테고리 리스트에서 해당 카테고리 이름이 있는지 확인
-        boolean categoryExistsInInventory = inventory.getCategory().stream()
-                .anyMatch(categoryId -> categoryRepository.findById(categoryId)
-                        .map(cat -> cat.getName().equals(categoryName)).orElse(false));
-
-        // 3. 해당 Inventory에 카테고리가 없으면 예외 발생
-        if (!categoryExistsInInventory) {
-            throw new BaseException(ErrorCode._CATEGORY_NOT_IN_INVENTORY);
-        }
-
-        // 4. Inventory의 카테고리 리스트에서 해당 카테고리 ID를 제외
-        List<Long> updatedCategories = inventory.getCategory().stream()
-                .filter(categoryId -> categoryRepository.findById(categoryId)
-                        .map(cat -> !cat.getName().equals(categoryName)).orElse(true))
-                .collect(Collectors.toList());
-
-        inventory.setCategory(updatedCategories);
-        inventoryRepository.save(inventory);
-
-        // 5. 다른 Inventory에서 해당 카테고리가 사용되고 있는지 확인
-        Category category = categoryRepository.findByName(categoryName)
-                .orElseThrow(() -> new BaseException(ErrorCode._CATEGORY_NOT_FOUND));
-
-        boolean isCategoryUsedInOtherInventories = inventoryRepository.findAll().stream()
-                .anyMatch(inv -> inv.getCategory().contains(category.getId()));
-
-        // 6. 다른 Inventory에 사용되지 않으면 카테고리 삭제
-        if (!isCategoryUsedInOtherInventories) {
-            categoryRepository.delete(category);
-        }
-    }
-
 
 }

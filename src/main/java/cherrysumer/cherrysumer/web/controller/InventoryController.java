@@ -64,10 +64,4 @@ public class InventoryController {
         return ApiResponse.onSuccess("카테고리가 성공적으로 추가되었습니다.");
     }
 
-    // 카테고리 삭제
-    @DeleteMapping("/category/{id}")
-    public ApiResponse<?> removeCategoryFromInventory(@PathVariable Long id, @RequestParam String categoryName) {
-        inventoryService.removeCategoryFromInventory(id, categoryName);
-        return ApiResponse.onSuccess("카테고리가 성공적으로 삭제되었습니다.");
-    }
 }
