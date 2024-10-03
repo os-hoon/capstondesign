@@ -27,8 +27,8 @@ public class UserController {
 
     @PostMapping("/join")
     public ApiResponse<?> createUser(@Valid @RequestBody UserRequestDTO.userJoinRequestDTO request) throws ParseException {
-        userService.userJoin(request);
-        return ApiResponse.onSuccess("회원가입이 성공하였습니다.");
+        //userService.userJoin(request);
+        return ApiResponse.onSuccess(userService.userJoin(request));
     }
 
     @PostMapping("/login")

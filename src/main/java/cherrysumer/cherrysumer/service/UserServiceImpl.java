@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public void userJoin(UserRequestDTO.userJoinRequestDTO request) throws ParseException {
+    public UserResponseDTO.successLoginDTO userJoin(UserRequestDTO.userJoinRequestDTO request) throws ParseException {
         String password = hashPassword(request.getPassword());
 
         User user = new User();
@@ -41,7 +41,11 @@ public class UserServiceImpl implements UserService {
         user.setRegionCode(request.getRegionCode());
         user.setPoint(convertPoint(request.getLongitude(), request.getLatitude()));
 
-        userRepository.save(user);
+        User newUser = userRepository.save(user);
+
+        String token = tokenProvider.generateJwtToken(new UserRequestDTO.userInfoDTO(newUser.getId()));
+
+        return new UserResponseDTO.successLoginDTO(token, newUser.getRegion(), newUser.getName());
     }
 
     @Override

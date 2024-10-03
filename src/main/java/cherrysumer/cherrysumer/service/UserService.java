@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface UserService {
 
-    void userJoin(UserRequestDTO.userJoinRequestDTO request) throws ParseException;
+    UserResponseDTO.successLoginDTO userJoin(UserRequestDTO.userJoinRequestDTO request) throws ParseException;
 
     void findUserId(String loginId);
 
