@@ -16,14 +16,14 @@ public class InventoryDTO {
     @NotEmpty(message = "재고이름을 입력하세요.")
     private String productName;
 
-    private LocalDateTime expirationDate;
+    private LocalDateTime expiration_date;
 
     private int quantity;
 
-    private String stockLocation;
+    private String stock_location;
 
     private List<Long> category;
 
-    private List<String> detailedCategory;
+    private List<String> detailed_category;
 
 }

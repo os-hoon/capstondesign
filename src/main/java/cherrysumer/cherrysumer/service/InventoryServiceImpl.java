@@ -41,11 +41,11 @@ public class InventoryServiceImpl implements InventoryService {
         Inventory inventory = new Inventory();
         inventory.setUser(user);  // User 객체 설정
         inventory.setProductName(inventoryDTO.getProductName());
-        inventory.setExpiration_date(inventoryDTO.getExpirationDate());
+        inventory.setExpiration_date(inventoryDTO.getExpiration_date());
         inventory.setQuantity(inventoryDTO.getQuantity());
-        inventory.setStock_location(inventoryDTO.getStockLocation());
+        inventory.setStock_location(inventoryDTO.getStock_location());
         inventory.setCategory(inventoryDTO.getCategory());
-        inventory.setDetailed_category(inventoryDTO.getDetailedCategory());
+        inventory.setDetailed_category(inventoryDTO.getDetailed_category());
 
         inventoryRepository.save(inventory);
     }
@@ -56,11 +56,11 @@ public class InventoryServiceImpl implements InventoryService {
                 .orElseThrow(() -> new BaseException(ErrorCode._INVENTORY_NOT_FOUND));
 
         inventory.setProductName(inventoryDTO.getProductName());
-        inventory.setExpiration_date(inventoryDTO.getExpirationDate());
+        inventory.setExpiration_date(inventoryDTO.getExpiration_date());
         inventory.setQuantity(inventoryDTO.getQuantity());
-        inventory.setStock_location(inventoryDTO.getStockLocation());
+        inventory.setStock_location(inventoryDTO.getStock_location());
         inventory.setCategory(inventoryDTO.getCategory());
-        inventory.setDetailed_category(inventoryDTO.getDetailedCategory());
+        inventory.setDetailed_category(inventoryDTO.getDetailed_category());
 
         inventoryRepository.save(inventory);
     }
