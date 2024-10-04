@@ -57,11 +57,6 @@ public class InventoryController {
         return ApiResponse.onSuccess(inventories);
     }
 
-    // 카테고리 추가
-    @PostMapping("/category/{id}")
-    public ApiResponse<?> addCategoryToInventory(@PathVariable Long id, @RequestParam String categoryName) {
-        inventoryService.addCategoryToInventory(id, categoryName);
-        return ApiResponse.onSuccess("카테고리가 성공적으로 추가되었습니다.");
-    }
+
 
 }

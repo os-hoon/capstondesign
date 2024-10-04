@@ -22,8 +22,7 @@ public class InventoryDTO {
 
     private String stock_location;
 
-    private List<Long> category;
+    private String category;
 
-    private List<String> detailed_category;
 
 }

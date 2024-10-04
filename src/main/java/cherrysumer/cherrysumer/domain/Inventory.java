@@ -35,11 +35,6 @@ public class Inventory extends BaseEntity{
 
     private String stock_location;
 
-    @Column(name = "category", columnDefinition = "json")
-    @JdbcTypeCode(SqlTypes.JSON)
-    private List<Long> category;
+    private String category;
 
-    @Column(name = "detailed_category", columnDefinition = "json")
-    @JdbcTypeCode(SqlTypes.JSON)
-    private List<String> detailed_category;
 }
