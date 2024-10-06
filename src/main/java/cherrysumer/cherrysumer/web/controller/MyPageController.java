@@ -28,12 +28,12 @@ public class MyPageController {
     private final ParticipateService participateService;
 
     // 모집, 참여 현황 조회
-    @GetMapping("/applications/{status}")
-    public ApiResponse<?> applicationList(@PathVariable(name = "status") int status) {
+    @GetMapping("/applications/{filter}")
+    public ApiResponse<?> applicationList(@PathVariable(name = "filter") String filter) {
         // 0 = 모집, 1 = 참여
-       if(status == 0) {
+       if(filter.equals("모집")) {
             return ApiResponse.onSuccess(postService.findRecruitList());
-        } else if(status == 1) {
+        } else if(filter.equals("참여")) {
             return ApiResponse.onSuccess(participateService.findApplicationList());
         } else
             throw new CertificationHandler(ErrorCode._BAD_REQUEST);
@@ -72,8 +72,8 @@ public class MyPageController {
     // 참여 신청자 목록 조회
     @GetMapping("/participations/{postId}")
     public ApiResponse<?> participateList(@PathVariable(name = "postId") Long postId,
-                                          @RequestParam(name = "sorted") int sorted) {
-        return ApiResponse.onSuccess(participateService.participateList(postId, sorted));
+                                          @RequestParam(name = "filter") String filter) {
+        return ApiResponse.onSuccess(participateService.participateList(postId, filter));
     }
 
     // 참여 신청자 승인, 거절

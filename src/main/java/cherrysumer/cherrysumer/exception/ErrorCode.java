@@ -15,7 +15,7 @@ public enum ErrorCode {
     // token error
     _TOKEN_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "T401", "유효하지 않은 토큰입니다."),
     _TOKEN_EXPIRATION(HttpStatus.UNAUTHORIZED, "T401", "만료된 토큰입니다."),
-    _TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "T404", "존재하지 않는 토큰입니다."),
+    _TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "T404", "토큰을 찾을 수 없습니다."),
     _TOKEN_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "T500", "토큰 생성에 실패했습니다."),
 
     // mail error

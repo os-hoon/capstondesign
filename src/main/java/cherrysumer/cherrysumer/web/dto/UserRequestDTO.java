@@ -28,7 +28,7 @@ public class UserRequestDTO {
         @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,6}$", message = "이메일 형식이 올바르지 않습니다.")
         private String email;
 
-        private List<Long> category;
+        private List<String> category;
 
         private String region;
 
@@ -90,7 +90,7 @@ public class UserRequestDTO {
     public static class changePwDTO {
         String loginId;
         @NotEmpty(message = "변경할 비밀번호를 입력하세요.")
-        String pasawd;
+        String pasaword;
     }
 
     @Data
@@ -100,6 +100,6 @@ public class UserRequestDTO {
         Long userId;
         Long postId;
         //0: 승인, 1: 거절
-        int isConfirmed;
+        String isConfirmed;
     }
 }

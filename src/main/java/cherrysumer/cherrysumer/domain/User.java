@@ -36,7 +36,7 @@ public class User extends BaseEntity{
 
     @Column(name = "category", columnDefinition = "json")
     @JdbcTypeCode(SqlTypes.JSON)
-    private List<Long> category;
+    private List<String> category;
 
     private String region;
 

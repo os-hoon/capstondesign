@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.io.ParseException;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -62,23 +63,44 @@ public class PostServiceImpl implements PostService{
 
     // 게시글 조회
     @Override
-    public List<PostResponseDTO.postDTO> findRegionPosts(int sotrted) {
-        return getRegionPosts(sotrted);
+    public List<PostResponseDTO.postDTO> findRegionPosts(List<String> category1, String category2) {
+        return getRegionPosts(category1, category2);
     }
 
-    private List<PostResponseDTO.postDTO> getRegionPosts(int sotrted) {
-        // 0 : 최신순, 1 : 인기순
-        if(sotrted != 0 && sotrted != 1) {
-            throw new BaseException(ErrorCode._BAD_REQUEST);
-        }
-
+    /***
+     * @param category: 카테고리 필터 (9 + 무선택)
+     * @param filter: 최신순, 추천순, 인기순, 저가순, 고가순
+     * @return
+     */
+    private List<PostResponseDTO.postDTO> getRegionPosts(List<String> category, String filter) {
         User user = userService.getLoggedInUser();
-        List<Post> posts = postRepository.findAllByRegionCodeOrderByCreatedAt(user.getRegionCode());
+        List<String> userCate = user.getCategory();
 
-        // 인기순 정렬
-        if(sotrted == 1) {
-            posts.sort((o1, o2) -> (int) (likesRepository.countByPost(o2) - likesRepository.countByPost(o1)));
+        List<Post> posts = (category == null) ? postRepository.findAllByRegionCodeOrderByCreatedAt(user.getRegionCode()) :
+                postRepository.findAllByRegionCodeAndCategoryInOrderByCreatedAt(user.getRegionCode(), category);
+        //List<Post> posts = postRepository.findAllByRegionCodeOrderByCreatedAt(user.getRegionCode());
+
+        switch (filter) {
+            case "최신순":
+                break;
+            case "추천순":
+                posts = posts.stream()
+                        .sorted(Comparator.comparingInt(p -> userCate.contains(p.getCategory()) ? 0 : 1))
+                        .collect(Collectors.toList());
+                break;
+            case "인기순":
+                posts.sort((o1, o2) -> (int) (likesRepository.countByPost(o2) - likesRepository.countByPost(o1)));
+                break;
+            case "저가순":
+                posts.sort((o1, o2) -> (int) ((o1.getPrice()/(double)o1.getCapacity()) - (o2.getPrice()/(double)o2.getCapacity())));
+                break;
+            case "고가순":
+                posts.sort((o1, o2) -> (int) ((o2.getPrice()/(double)o2.getCapacity()) - (o1.getPrice()/(double)o1.getCapacity())));
+                break;
+            default:
+                throw new BaseException(ErrorCode._POST_BAD_REQUEST);
         }
+        //posts.sort((o1, o2) -> (int) (likesRepository.countByPost(o2) - likesRepository.countByPost(o1)));
 
         List<PostResponseDTO.postDTO> list = posts.stream()
                 .map((Post p) -> convertPost(p, user))
@@ -168,7 +190,7 @@ public class PostServiceImpl implements PostService{
         Participate p = new Participate();
         p.setUser(user);
         p.setPost(post);
-        p.setStatus(2);
+        p.setStatus("미확인");
         participateRepository.save(p);
 
         return post;

@@ -12,7 +12,7 @@ public interface ParticipateService {
 
     List<PostResponseDTO.applicationDTO> findApplicationList();
 
-    List<PostResponseDTO.participateUserDTO> participateList(Long postId, int status);
+    List<PostResponseDTO.participateUserDTO> participateList(Long postId, String filter);
 
     void updateParticipate(UserRequestDTO.decideUserDTO request);
 

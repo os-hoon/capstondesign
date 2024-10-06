@@ -12,6 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @RequestMapping("/posts")
@@ -21,9 +25,13 @@ public class PostController {
 
     // 공구 게시글 조회
     @GetMapping("")
-    public ApiResponse<?> inquiryPosts(@RequestParam("sorted") int sotrted) {
-        // 0 : 최신순, 1 : 인기순
-        return ApiResponse.onSuccess(postService.findRegionPosts(sotrted));
+    public ApiResponse<?> inquiryPosts(@RequestParam(value = "category") String category,
+                                       @RequestParam("filter") String filter) {
+        List<String> categorys = (category.equals("")) ? null :
+                Arrays.stream(category.split(","))
+                .map(String::trim) // 각 요소의 앞뒤 공백 제거
+                .collect(Collectors.toList());;
+        return ApiResponse.onSuccess(postService.findRegionPosts(categorys, filter));
     }
 
     // 공구 게시글 작성

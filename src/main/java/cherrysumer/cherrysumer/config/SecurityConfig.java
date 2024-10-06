@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .formLogin((form) -> form.disable())
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/user/auth").authenticated()
                         .requestMatchers(permitRequest).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthFilter(userDetailService, tokenProvider),

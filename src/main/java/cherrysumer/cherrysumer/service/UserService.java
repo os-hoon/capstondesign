@@ -30,4 +30,6 @@ public interface UserService {
     void changePw(UserRequestDTO.changePwDTO request);
 
     Point convertPoint(String longitude, String latitude) throws ParseException;
+
+    UserResponseDTO.successLoginDTO loginAuth();
 }

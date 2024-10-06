@@ -1,6 +1,5 @@
 package cherrysumer.cherrysumer.web.controller;
 
-import cherrysumer.cherrysumer.domain.User;
 import cherrysumer.cherrysumer.service.MailService;
 import cherrysumer.cherrysumer.service.UserService;
 import cherrysumer.cherrysumer.util.ApiResponse;
@@ -14,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.io.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
@@ -81,5 +82,11 @@ public class UserController {
     public ApiResponse<?> changePw(@Valid @RequestBody UserRequestDTO.changePwDTO request) {
         userService.changePw(request);
         return ApiResponse.onSuccess("비밀번호가 변경되었습니다.");
+    }
+
+    // 로그인 여부 확인
+    @GetMapping("/auth")
+    public ApiResponse<?> test() {
+        return ApiResponse.onSuccess(userService.loginAuth());
     }
 }

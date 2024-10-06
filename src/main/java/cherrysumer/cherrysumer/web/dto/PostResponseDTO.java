@@ -34,7 +34,7 @@ public class PostResponseDTO {
             this.postId = p.getId();
             this.title = p.getTitle();
             this.region = p.getUser().getRegion();
-            this.price = Math.round(p.getPrice() / p.getCapacity());
+            this.price = (int) Math.round(p.getPrice() / (double) p.getCapacity());
             //this.created_at = p.getCreatedAt();
 
             this.upload = upload;
@@ -82,7 +82,7 @@ public class PostResponseDTO {
     public static class applicationDTO {
         private String title;
         private Long postId;
-        private int isConfirmed;
+        private String isConfirmed;
     }
 
     @Getter
@@ -114,7 +114,7 @@ public class PostResponseDTO {
         private Long postId;
         private String nickname;
         private String region;
-        private int isConfirmed;
+        private String isConfirmed;
     }
 
     @Getter
@@ -148,7 +148,7 @@ public class PostResponseDTO {
             this.writer = p.getUser().getNickname();
             this.detail_category = p.getDetailed_category();
             this.title = p.getTitle();
-            this.price = Math.round(p.getPrice() / p.getCapacity());
+            this.price = (int) Math.round(p.getPrice() / (double) p.getCapacity());
             this.date = p.getDate();
             this.capacity = p.getCapacity();
             this.content = p.getContent();
@@ -176,7 +176,7 @@ public class PostResponseDTO {
             this.postId = p.getId();
             this.title = p.getTitle();
             this.region = p.getUser().getRegion();
-            this.price = Math.round(p.getPrice() / p.getCapacity());
+            this.price = (int) Math.round(p.getPrice() / (double) p.getCapacity());
         }
     }
 }

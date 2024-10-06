@@ -10,7 +10,7 @@ public interface PostService {
 
     PostResponseDTO.summaryPostDTO savePost(PostRequestDTO.postDTO request) throws ParseException;
 
-    List<PostResponseDTO.postDTO> findRegionPosts(int sotrted);
+    List<PostResponseDTO.postDTO> findRegionPosts(List<String> category1, String category2);
 
     void deletePost(Long postId);
 

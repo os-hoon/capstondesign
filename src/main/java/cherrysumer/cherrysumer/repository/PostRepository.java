@@ -24,4 +24,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query(value = "SELECT * FROM post p WHERE JSON_CONTAINS(p.detailed_category, JSON_QUOTE(:keyword))", nativeQuery = true)
     List<Post> searchByKeywordNative(@Param("keyword") String keyword);
+
+    List<Post> findAllByRegionCodeAndCategoryInOrderByCreatedAt(String regionCode, List<String> category);
 }

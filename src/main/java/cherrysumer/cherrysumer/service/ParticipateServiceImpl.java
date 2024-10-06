@@ -51,13 +51,13 @@ public class ParticipateServiceImpl implements ParticipateService{
 
     // 참여 신청자 목록 조회
     @Override
-    public List<PostResponseDTO.participateUserDTO> participateList(Long postId, int status) {
-        // 0 : 전체, 1: 승인, 2: 거절
-        if(status != 0 && status != 1 && status != 2) {
+    public List<PostResponseDTO.participateUserDTO> participateList(Long postId, String filter) {
+        List<Participate> participates;
+        if(filter.equals("전체") || filter.equals("승인") || filter.equals(("거절"))) {
+            participates = participate(postId, filter);
+        } else {
             throw new BaseException(ErrorCode._BAD_REQUEST);
         }
-
-        List<Participate> participates = participate(postId, status);
 
         List<PostResponseDTO.participateUserDTO> list = participates.stream()
                 .map((Participate p) -> convertUser(p))
@@ -66,7 +66,7 @@ public class ParticipateServiceImpl implements ParticipateService{
         return list;
     }
 
-    public List<Participate> participate(Long postId, int status) {
+    public List<Participate> participate(Long postId, String filter) {
         User user = userService.getLoggedInUser();
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostErrorHandler(ErrorCode._POST_NOT_FOUND));
@@ -77,11 +77,11 @@ public class ParticipateServiceImpl implements ParticipateService{
 
         List<Participate> participates;
 
-        if(status == 0) {
+        if(filter.equals("승인")) {
             participates = participateRepository.findAllByPost0(post);
-        } else if(status == 1) {
+        } else if(filter.equals("거절")) {
             participates = participateRepository.findAllByPost1(post);
-        } else {
+        } else { // 전체
             participates = participateRepository.findAllByPost(post);
         }
         return participates;
@@ -101,10 +101,10 @@ public class ParticipateServiceImpl implements ParticipateService{
         if(!post.getUser().equals(author))
             throw new PostErrorHandler(ErrorCode._POST_FORBIDDEN);
         // 마감된 모집, 승인한 사용자
-        if(post.isClosed() && request.getIsConfirmed() == 0)
+        if(post.isClosed() && request.getIsConfirmed().equals("승인"))
             throw new PostErrorHandler(ErrorCode._POST_CONFLICT);
         // 값이 0,1이 아닌 경우
-        if(request.getIsConfirmed() != 0 && request.getIsConfirmed() != 1) {
+        if(request.getIsConfirmed().equals("승인") && request.getIsConfirmed().equals("거절")) {
             throw new BaseException(ErrorCode._BAD_REQUEST);
         }
 
@@ -125,7 +125,7 @@ public class ParticipateServiceImpl implements ParticipateService{
     @Override
     public void closeRecruit(User user, Post post) {
         for(Participate p : participateRepository.searchByConfirm(post)) {
-            p.setStatus(1);
+            p.setStatus("거절");
             participateRepository.save(p);
         }
     }

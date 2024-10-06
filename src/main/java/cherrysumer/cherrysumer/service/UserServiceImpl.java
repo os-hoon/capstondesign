@@ -61,6 +61,7 @@ public class UserServiceImpl implements UserService {
 
         return point;
     }
+
     @Override
     public void findUserId(String loginId) {
         if(userRepository.existsUserByLoginId(loginId))
@@ -120,6 +121,13 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+    // 로그인 여부 확인, 토큰 만료 확인
+    @Override
+    public UserResponseDTO.successLoginDTO loginAuth() {
+        User user = getLoggedInUser();
+        return new UserResponseDTO.successLoginDTO(user.getRegion(), user.getName());
+    }
+
     // 비밀번호 변경
     @Override
     public void changePw(UserRequestDTO.changePwDTO request) {
@@ -130,7 +138,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByLoginId(request.getLoginId())
                 .orElseThrow(() -> new UserErrorHandler(ErrorCode._USER_NOT_FOUND));
 
-        String pwd = hashPassword(request.getPasawd());
+        String pwd = hashPassword(request.getPasaword());
         user.setPasswd(pwd);
         userRepository.save(user);
     }
