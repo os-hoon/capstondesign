@@ -20,7 +20,7 @@ public class InventoryDTO {
 
     private int quantity;
 
-    private String stock_location;
+    private String stockLocation;
 
     private String category;
 

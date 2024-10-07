@@ -42,7 +42,7 @@ public class InventoryServiceImpl implements InventoryService {
         inventory.setProductName(inventoryDTO.getProductName());
         inventory.setExpiration_date(inventoryDTO.getExpiration_date());
         inventory.setQuantity(inventoryDTO.getQuantity());
-        inventory.setStockLocation(inventoryDTO.getStock_location());
+        inventory.setStockLocation(inventoryDTO.getStockLocation());
         inventory.setCategory(inventoryDTO.getCategory());
 
         inventoryRepository.save(inventory);
@@ -56,7 +56,7 @@ public class InventoryServiceImpl implements InventoryService {
         inventory.setProductName(inventoryDTO.getProductName());
         inventory.setExpiration_date(inventoryDTO.getExpiration_date());
         inventory.setQuantity(inventoryDTO.getQuantity());
-        inventory.setStockLocation(inventoryDTO.getStock_location());
+        inventory.setStockLocation(inventoryDTO.getStockLocation());
         inventory.setCategory(inventoryDTO.getCategory());
 
         inventoryRepository.save(inventory);
