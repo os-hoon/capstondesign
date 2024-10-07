@@ -70,12 +70,10 @@ public class InventoryController {
     @GetMapping
     public ApiResponse<?> getFilteredInventory(@RequestParam(value = "category", required = false) String category,
                                                @RequestParam("filter") String filter) {
-        List<String> categories = (category == null || category.equals("")) ? null :
-                Arrays.stream(category.split(","))
-                        .map(String::trim)
-                        .collect(Collectors.toList());
+        // 카테고리가 선택되지 않았을 경우 null 처리
+        String selectedCategory = (category == null || category.equals("")) ? null : category.trim();
 
-        return ApiResponse.onSuccess(inventoryService.findFilteredInventory(categories, filter));
+        return ApiResponse.onSuccess(inventoryService.findFilteredInventory(selectedCategory, filter));
     }
 
 

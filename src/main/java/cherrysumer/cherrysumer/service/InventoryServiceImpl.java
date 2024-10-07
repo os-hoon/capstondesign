@@ -25,11 +25,17 @@ public class InventoryServiceImpl implements InventoryService {
     private final UserService userService;
 
     @Override
-    public List<InventoryDTO> findFilteredInventory(List<String> categories, String filter) {
+    public List<InventoryDTO> findFilteredInventory(String category, String filter) {
         User user = userService.getLoggedInUser();
-        List<Inventory> inventories = (categories == null)
-                ? inventoryRepository.findAllByUserIdOrderByCreatedAt(user.getId())
-                : inventoryRepository.findAllByUserIdAndCategoryInOrderByCreatedAt(user.getId(), categories);
+        List<Inventory> inventories;
+
+        if (category == null) {
+            // 카테고리가 선택되지 않았을 경우 모든 카테고리 조회
+            inventories = inventoryRepository.findAllByUserIdOrderByCreatedAt(user.getId());
+        } else {
+            // 특정 카테고리 필터링
+            inventories = inventoryRepository.findAllByUserIdAndCategoryOrderByCreatedAt(user.getId(), category);
+        }
 
         switch (filter) {
             case "최신순":
