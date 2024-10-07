@@ -11,7 +11,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,13 +22,14 @@ public class InventoryController {
 
     private final InventoryService inventoryService;
 
+    /*
     // 기존 재고 조회
     @GetMapping
     public ApiResponse<List<Inventory>> getInventory(@AuthenticationPrincipal User user) {
         Long userId = Long.parseLong(user.getUsername());  // 현재 로그인한 사용자의 ID를 가져옴
         List<Inventory> inventories = inventoryService.findInventoryByUserId(userId);
         return ApiResponse.onSuccess(inventories);
-    }
+    }*/
 
     // 재고 추가
     @PostMapping("/insert")
@@ -62,6 +65,17 @@ public class InventoryController {
         Long userId = Long.parseLong(user.getUsername());
         List<Inventory> inventories = inventoryService.findInventoryByStockLocationAndUserId(stockLocation, userId);
         return ApiResponse.onSuccess(inventories);
+    }
+
+    @GetMapping
+    public ApiResponse<?> getFilteredInventory(@RequestParam(value = "category", required = false) String category,
+                                               @RequestParam("filter") String filter) {
+        List<String> categories = (category == null || category.equals("")) ? null :
+                Arrays.stream(category.split(","))
+                        .map(String::trim)
+                        .collect(Collectors.toList());
+
+        return ApiResponse.onSuccess(inventoryService.findFilteredInventory(categories, filter));
     }
 
 

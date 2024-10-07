@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +22,47 @@ public class InventoryServiceImpl implements InventoryService {
 
     private final InventoryRepository inventoryRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
+
+    @Override
+    public List<InventoryDTO> findFilteredInventory(List<String> categories, String filter) {
+        User user = userService.getLoggedInUser();
+        List<Inventory> inventories = (categories == null)
+                ? inventoryRepository.findAllByUserIdOrderByCreatedAt(user.getId())
+                : inventoryRepository.findAllByUserIdAndCategoryInOrderByCreatedAt(user.getId(), categories);
+
+        switch (filter) {
+            case "최신순":
+                // 기본적으로 최신순이므로 이미 정렬되어 있음
+                break;
+            case "유통기한 임박순":
+                inventories.sort(Comparator.comparing(Inventory::getExpiration_date));
+                break;
+            case "수량 적은 순":
+                inventories.sort(Comparator.comparingInt(Inventory::getQuantity));
+                break;
+            case "수량 많은 순":
+                inventories.sort((o1, o2) -> o2.getQuantity() - o1.getQuantity());
+                break;
+            default:
+                throw new BaseException(ErrorCode._INVENTORY_INVALID_FILTER);
+        }
+
+        return inventories.stream()
+                .map(this::convertToInventoryDTO)
+                .collect(Collectors.toList());
+    }
+
+    private InventoryDTO convertToInventoryDTO(Inventory inventory) {
+        return new InventoryDTO(
+                inventory.getProductName(),
+                inventory.getExpiration_date(),
+                inventory.getQuantity(),
+                inventory.getStockLocation(),
+                inventory.getCategory()
+        );
+    }
+
     @Override
     public List<Inventory> findInventoryByUserId(Long userId) {
         return inventoryRepository.findAllByUserId(userId);
@@ -77,6 +120,7 @@ public class InventoryServiceImpl implements InventoryService {
     public List<Inventory> searchInventory(String query) {
         return inventoryRepository.findByProductNameContaining(query);
     }
+
 
 
 }

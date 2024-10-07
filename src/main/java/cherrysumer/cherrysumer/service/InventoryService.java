@@ -12,4 +12,5 @@ public interface InventoryService {
     void editInventory(Long id, InventoryDTO inventoryDTO);
     void deleteInventory(Long id);
     List<Inventory> searchInventory(String query);
+    List<InventoryDTO> findFilteredInventory(List<String> categories, String filter);
 }

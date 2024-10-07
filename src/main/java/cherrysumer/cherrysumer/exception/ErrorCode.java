@@ -41,6 +41,7 @@ public enum ErrorCode {
     _POST_CONFLICT(HttpStatus.CONFLICT, "P409", "이미 마감된 공구입니다."),
 
     //inventory error
+    _INVENTORY_INVALID_FILTER(HttpStatus.BAD_REQUEST, "C400", "조회할 수 있는 재고가 없습니다."),
     _INVENTORY_NOT_FOUND(HttpStatus.NOT_FOUND, "I404", "재고를 찾을 수 없습니다."),
     _CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "C404", "해당 카테고리를 찾을 수 없습니다."),
     _CATEGORY_DUPLICATE(HttpStatus.CONFLICT, "C409", "해당 재고에 이미 같은 이름의 카테고리가 존재합니다."),

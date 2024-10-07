@@ -2,6 +2,9 @@ package cherrysumer.cherrysumer.repository;
 
 import cherrysumer.cherrysumer.domain.Inventory;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 import java.util.List;
 
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
@@ -9,4 +12,7 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     List<Inventory> findByProductNameContaining(String query);  // 검색 기능을 위한 메서드
 
     List<Inventory> findByStockLocationAndUserId(String stockLocation, Long userId);
+
+    List<Inventory> findAllByUserIdOrderByCreatedAt(Long userId);
+    List<Inventory> findAllByUserIdAndCategoryInOrderByCreatedAt(Long userId, List<String> categories);
 }
