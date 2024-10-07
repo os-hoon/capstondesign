@@ -31,10 +31,10 @@ public class InventoryServiceImpl implements InventoryService {
 
         if (category == null) {
             // 카테고리가 선택되지 않았을 경우 모든 카테고리 조회
-            inventories = inventoryRepository.findAllByUserIdOrderByCreatedAt(user.getId());
+            inventories = inventoryRepository.findAllByUserIdOrderByUpdatedAtDesc(user.getId());
         } else {
             // 특정 카테고리 필터링
-            inventories = inventoryRepository.findAllByUserIdAndCategoryOrderByCreatedAt(user.getId(), category);
+            inventories = inventoryRepository.findAllByUserIdAndCategoryOrderByUpdatedAtDesc(user.getId(), category);
         }
 
         switch (filter) {
