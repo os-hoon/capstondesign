@@ -26,6 +26,11 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    public List<Inventory> findInventoryByStockLocationAndUserId(String stockLocation, Long userId) {
+        return inventoryRepository.findByStockLocationAndUserId(stockLocation, userId);
+    }
+
+    @Override
     public void insertInventory(Long userId, InventoryDTO inventoryDTO) {
         // 사용자 찾기
         User user = userRepository.findById(userId)
@@ -37,7 +42,7 @@ public class InventoryServiceImpl implements InventoryService {
         inventory.setProductName(inventoryDTO.getProductName());
         inventory.setExpiration_date(inventoryDTO.getExpiration_date());
         inventory.setQuantity(inventoryDTO.getQuantity());
-        inventory.setStock_location(inventoryDTO.getStock_location());
+        inventory.setStockLocation(inventoryDTO.getStock_location());
         inventory.setCategory(inventoryDTO.getCategory());
 
         inventoryRepository.save(inventory);
@@ -51,7 +56,7 @@ public class InventoryServiceImpl implements InventoryService {
         inventory.setProductName(inventoryDTO.getProductName());
         inventory.setExpiration_date(inventoryDTO.getExpiration_date());
         inventory.setQuantity(inventoryDTO.getQuantity());
-        inventory.setStock_location(inventoryDTO.getStock_location());
+        inventory.setStockLocation(inventoryDTO.getStock_location());
         inventory.setCategory(inventoryDTO.getCategory());
 
         inventoryRepository.save(inventory);

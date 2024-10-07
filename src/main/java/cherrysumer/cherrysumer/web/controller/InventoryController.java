@@ -57,6 +57,13 @@ public class InventoryController {
         return ApiResponse.onSuccess(inventories);
     }
 
+    @GetMapping("/location/{stockLocation}")
+    public ApiResponse<List<Inventory>> getInventoryByLocation(@AuthenticationPrincipal User user, @PathVariable String stockLocation) {
+        Long userId = Long.parseLong(user.getUsername());
+        List<Inventory> inventories = inventoryService.findInventoryByStockLocationAndUserId(stockLocation, userId);
+        return ApiResponse.onSuccess(inventories);
+    }
+
 
 
 }

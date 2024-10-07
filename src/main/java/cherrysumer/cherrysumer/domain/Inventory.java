@@ -33,7 +33,7 @@ public class Inventory extends BaseEntity{
 
     private int quantity;
 
-    private String stock_location;
+    private String stockLocation;
 
     private String category;
 

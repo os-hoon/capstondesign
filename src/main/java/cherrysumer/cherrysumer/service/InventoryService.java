@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface InventoryService {
     List<Inventory> findInventoryByUserId(Long userId);
+    List<Inventory> findInventoryByStockLocationAndUserId(String stockLocation, Long userId);
     void insertInventory(Long userId, InventoryDTO inventoryDTO);
     void editInventory(Long id, InventoryDTO inventoryDTO);
     void deleteInventory(Long id);
