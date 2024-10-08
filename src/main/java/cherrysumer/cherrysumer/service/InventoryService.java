@@ -11,6 +11,6 @@ public interface InventoryService {
     void insertInventory(Long userId, InventoryDTO inventoryDTO);
     void editInventory(Long id, InventoryDTO inventoryDTO);
     void deleteInventory(Long id);
-    List<Inventory> searchInventory(String query);
+    List<Inventory> searchInventory(String query, Long userId);
     List<InventoryDTO> findFilteredInventory(String categories, String filter);
 }

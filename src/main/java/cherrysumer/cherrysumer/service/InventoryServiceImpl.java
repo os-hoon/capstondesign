@@ -123,7 +123,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public List<Inventory> searchInventory(String query) {
+    public List<Inventory> searchInventory(String query, Long id) {
         return inventoryRepository.findByProductNameContaining(query);
     }
 

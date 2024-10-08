@@ -55,8 +55,9 @@ public class InventoryController {
 
     // 재고 검색
     @GetMapping("/search")
-    public ApiResponse<List<Inventory>> searchInventory(@RequestParam String query) {
-        List<Inventory> inventories = inventoryService.searchInventory(query);
+    public ApiResponse<List<Inventory>> searchInventory(@AuthenticationPrincipal User user,@RequestParam String query) {
+        Long userId = Long.parseLong(user.getUsername());
+        List<Inventory> inventories = inventoryService.searchInventory(query, userId);
         return ApiResponse.onSuccess(inventories);
     }
 
