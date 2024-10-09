@@ -133,7 +133,7 @@ public class ParticipateServiceImpl implements ParticipateService{
     // 응답 객체 변환
     private PostResponseDTO.applicationDTO convertApplicationPost(Participate p) {
         PostResponseDTO.applicationDTO post =
-                new PostResponseDTO.applicationDTO(p.getPost().getTitle(), p.getPost().getId(), p.getStatus());
+                new PostResponseDTO.applicationDTO(p.getPost().getId(), p.getPost().getTitle(), p.getPost().getProductname(), p.getStatus());
         return post;
     }
 

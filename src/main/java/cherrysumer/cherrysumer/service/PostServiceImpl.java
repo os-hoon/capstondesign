@@ -18,10 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.io.ParseException;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,6 +44,7 @@ public class PostServiceImpl implements PostService{
         Post post = new Post();
         post.setUser(user);
         post.setTitle(request.getTitle());
+        post.setProductname(request.getProductname());
         post.setCapacity(request.getCapacity());
         post.setDate(request.getDate());
         post.setCategory(request.getCategory());
@@ -63,8 +61,8 @@ public class PostServiceImpl implements PostService{
 
     // 게시글 조회
     @Override
-    public List<PostResponseDTO.postDTO> findRegionPosts(List<String> category1, String category2) {
-        return getRegionPosts(category1, category2);
+    public List<PostResponseDTO.postDTO> findRegionPosts(List<String> category, String filter) {
+        return getRegionPosts(category, filter);
     }
 
     /***
@@ -74,14 +72,27 @@ public class PostServiceImpl implements PostService{
      */
     private List<PostResponseDTO.postDTO> getRegionPosts(List<String> category, String filter) {
         User user = userService.getLoggedInUser();
-        List<String> userCate = user.getCategory();
 
-        List<Post> posts = (category == null) ? postRepository.findAllByRegionCodeOrderByCreatedAt(user.getRegionCode()) :
-                postRepository.findAllByRegionCodeAndCategoryInOrderByCreatedAt(user.getRegionCode(), category);
+        List<Post> posts = (category == null) ? postRepository.findAllByRegionCode(user.getRegionCode()) :
+                postRepository.findAllPost(user.getRegionCode(), category);
+
+        posts = filterPost(user, posts, filter);
         //List<Post> posts = postRepository.findAllByRegionCodeOrderByCreatedAt(user.getRegionCode());
+        //posts.sort((o1, o2) -> (int) (likesRepository.countByPost(o2) - likesRepository.countByPost(o1)));
+
+        List<PostResponseDTO.postDTO> list = posts.stream()
+                .map((Post p) -> convertPost(p, user))
+                .collect(Collectors.toList());
+
+        return list;
+    }
+
+    private List<Post> filterPost(User user, List<Post> posts, String filter) {
+        List<String> userCate = user.getCategory();
 
         switch (filter) {
             case "최신순":
+                posts.sort(Comparator.comparing(Post::getUpdatedAt).reversed());
                 break;
             case "추천순":
                 posts = posts.stream()
@@ -100,13 +111,8 @@ public class PostServiceImpl implements PostService{
             default:
                 throw new BaseException(ErrorCode._POST_BAD_REQUEST);
         }
-        //posts.sort((o1, o2) -> (int) (likesRepository.countByPost(o2) - likesRepository.countByPost(o1)));
 
-        List<PostResponseDTO.postDTO> list = posts.stream()
-                .map((Post p) -> convertPost(p, user))
-                .collect(Collectors.toList());
-
-        return list;
+        return posts;
     }
 
     // 게시글 삭제
@@ -297,12 +303,18 @@ public class PostServiceImpl implements PostService{
 
     // 검색
     @Override
-    public List<PostResponseDTO.postDTO> searchPosts(String q) {
+    public List<PostResponseDTO.postDTO> searchPosts(String q, List<String> category, String filter) {
         User user = userService.getLoggedInUser();
 
-        Set<Post> posts = new HashSet<>();
-        posts.addAll(postRepository.searchByKeyword(q));
-        posts.addAll(postRepository.searchByKeywordNative(q));
+        List<Post> sortPost = (category == null) ? postRepository.findAllByRegionCode(user.getRegionCode()) :
+                postRepository.findAllPost(user.getRegionCode(), category);
+
+        Set<Post> set = new HashSet<>();
+        set.addAll(postRepository.searchByKeyword(q));
+        set.addAll(postRepository.searchByKeywordNative(q));
+        set.addAll(sortPost);
+
+        List<Post> posts = filterPost(user, new ArrayList<>(set), filter);
 
         return posts.stream()
                 .map((Post p) -> convertPost(p, user))
@@ -348,7 +360,7 @@ public class PostServiceImpl implements PostService{
     private PostResponseDTO.recruitDTO convertRecruitPost(Post p) {
         int number = Integer.parseInt(String.valueOf(participateRepository.countAllByPost(p)));
 
-        PostResponseDTO.recruitDTO post = new PostResponseDTO.recruitDTO(p.getTitle(), number, p.getId());
+        PostResponseDTO.recruitDTO post = new PostResponseDTO.recruitDTO(p.getId(), p.getTitle(), p.getProductname(), number);
         return post;
     }
 }

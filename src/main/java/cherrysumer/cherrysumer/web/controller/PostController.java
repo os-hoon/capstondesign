@@ -61,8 +61,13 @@ public class PostController {
 
     // 게시글 검색
     @GetMapping("/search")
-    public ApiResponse<?> searchPost(@RequestParam("q") String q) {
-        return ApiResponse.onSuccess(postService.searchPosts(q));
+    public ApiResponse<?> searchPost(@RequestParam("q") String q, @RequestParam(value = "category") String category,
+                                     @RequestParam("filter") String filter) {
+        List<String> categorys = (category.equals("")) ? null :
+                Arrays.stream(category.split(","))
+                        .map(String::trim) // 각 요소의 앞뒤 공백 제거
+                        .collect(Collectors.toList());;
+        return ApiResponse.onSuccess(postService.searchPosts(q, categorys, filter));
     }
 
     // 공구 참여 신청

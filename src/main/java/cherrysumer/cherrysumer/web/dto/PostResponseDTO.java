@@ -17,6 +17,7 @@ public class PostResponseDTO {
     public static class postDTO {
         private Long postId;
         private String title;
+        private String productname;
         private String region;
         //private LocalDateTime created_at;
         private String upload;
@@ -33,6 +34,7 @@ public class PostResponseDTO {
         public postDTO(Post p, int likes, boolean like_status, String upload) {
             this.postId = p.getId();
             this.title = p.getTitle();
+            this.productname = p.getProductname();
             this.region = p.getUser().getRegion();
             this.price = (int) Math.round(p.getPrice() / (double) p.getCapacity());
             //this.created_at = p.getCreatedAt();
@@ -54,6 +56,7 @@ public class PostResponseDTO {
     public static class summaryPostDTO {
         private Long postId;
         private String title;
+        private String productname;
         private int price;
         private String place;
         private LocalDateTime date;
@@ -61,6 +64,7 @@ public class PostResponseDTO {
         public summaryPostDTO(Post p) {
             this.postId = p.getId();
             this.title = p.getTitle();
+            this.productname = p.getProductname();
             this.place = p.getPlace();
             this.price = Math.round(p.getPrice() / p.getCapacity());
             this.date = p.getDate();
@@ -71,17 +75,19 @@ public class PostResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class recruitDTO {
-        private String title;
-        private int number;
         private Long postId;
+        private String title;
+        private String productname;
+        private int number;
     }
 
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class applicationDTO {
-        private String title;
         private Long postId;
+        private String title;
+        private String productname;
         private String isConfirmed;
     }
 
@@ -130,6 +136,7 @@ public class PostResponseDTO {
         private String writer;
         private List<String> detail_category;
         private String title;
+        private String productname;
         private String upload;
         private int price;
         private LocalDateTime date;
@@ -148,6 +155,7 @@ public class PostResponseDTO {
             this.writer = p.getUser().getNickname();
             this.detail_category = p.getDetailed_category();
             this.title = p.getTitle();
+            this.productname = p.getProductname();
             this.price = (int) Math.round(p.getPrice() / (double) p.getCapacity());
             this.date = p.getDate();
             this.capacity = p.getCapacity();
@@ -169,12 +177,14 @@ public class PostResponseDTO {
     public static class postDataDTO {
         private Long postId;
         private String title;
+        private String productname;
         private String region;
         private int price;
 
         public postDataDTO(Post p) {
             this.postId = p.getId();
             this.title = p.getTitle();
+            this.productname = p.getProductname();
             this.region = p.getUser().getRegion();
             this.price = (int) Math.round(p.getPrice() / (double) p.getCapacity());
         }

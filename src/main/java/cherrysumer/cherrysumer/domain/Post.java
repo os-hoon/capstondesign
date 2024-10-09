@@ -27,6 +27,8 @@ public class Post extends BaseEntity{
 
     private String title;
 
+    private String productname;
+
     // 모집 인원
     private int capacity;
 
@@ -52,5 +54,8 @@ public class Post extends BaseEntity{
     private String regionCode;
 
     private boolean isClosed;
+
+    // 재고 등록 여부
+    //private boolean isRegist;
 
 }

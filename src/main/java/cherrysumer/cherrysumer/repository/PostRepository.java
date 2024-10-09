@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    List<Post> findAllByRegionCodeOrderByCreatedAt(String regionCode);
+    List<Post> findAllByRegionCode(String regionCode);
     List<Post> findAllByUser(User user);
 
     @Query(value = "SELECT * FROM post p WHERE p.title LIKE %:q% OR JSON_CONTAINS(p.categories, :q)", nativeQuery = true)
@@ -25,5 +25,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query(value = "SELECT * FROM post p WHERE JSON_CONTAINS(p.detailed_category, JSON_QUOTE(:keyword))", nativeQuery = true)
     List<Post> searchByKeywordNative(@Param("keyword") String keyword);
 
-    List<Post> findAllByRegionCodeAndCategoryInOrderByCreatedAt(String regionCode, List<String> category);
+    @Query("SELECT p FROM Post p WHERE p.regionCode = :regionCode And p.category in(:category)")
+    List<Post> findAllPost(@Param("regionCode")String regionCode, @Param("category")List<String> category);
 }

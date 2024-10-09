@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
         user.setName(request.getName());
         user.setNickname(request.getNickname());
         user.setEmail(request.getEmail());
-        user.setPasswd(password);
+        user.setPassword(password);
         user.setCategory(request.getCategory());
         user.setRegion(request.getRegion());
         user.setRegionCode(request.getRegionCode());
@@ -138,8 +138,8 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByLoginId(request.getLoginId())
                 .orElseThrow(() -> new UserErrorHandler(ErrorCode._USER_NOT_FOUND));
 
-        String pwd = hashPassword(request.getPasaword());
-        user.setPasswd(pwd);
+        String pwd = hashPassword(request.getPassword());
+        user.setPassword(pwd);
         userRepository.save(user);
     }
 
@@ -160,7 +160,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     private boolean checkPassword(String pwd, User user) {
-        return passwordEncoder.matches(pwd, user.getPasswd());
+        return passwordEncoder.matches(pwd, user.getPassword());
     }
 
     // 로그인 유저 가져오기

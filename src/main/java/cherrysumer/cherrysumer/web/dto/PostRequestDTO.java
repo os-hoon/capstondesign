@@ -17,6 +17,8 @@ public class PostRequestDTO {
         private Long postId; // 수정용
         @NotEmpty(message = "제목을 입력하세요.")
         private String title;
+        @NotEmpty(message = "상품명을 입력하세요.")
+        private String productname;
         @NotNull(message = "모집 인원을 입력하세요.")
         private int capacity;
         @NotNull(message = "날짜, 시간을 입력하세요.")
@@ -34,7 +36,7 @@ public class PostRequestDTO {
 
         private String category;
 
-        List<String> detailed_category;
+        private List<String> detailed_category;
 
         private String longitude; // 경도
 
