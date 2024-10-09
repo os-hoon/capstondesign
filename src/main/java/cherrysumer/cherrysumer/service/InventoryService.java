@@ -13,4 +13,6 @@ public interface InventoryService {
     void deleteInventory(Long id);
     List<Inventory> searchInventory(String query, Long userId);
     List<InventoryDTO> findFilteredInventory(String categories, String filter);
+    // 새로운 category, filter, stockLocation 필터링
+    List<InventoryDTO> findFilteredInventoryWithStockLocation(String category, String filter, String stockLocation);
 }

@@ -15,4 +15,6 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
 
     List<Inventory> findAllByUserIdOrderByUpdatedAtDesc(Long userId);
     List<Inventory> findAllByUserIdAndCategoryOrderByUpdatedAtDesc(Long userId, String category);
+    List<Inventory> findAllByUserIdAndStockLocationOrderByUpdatedAtDesc(Long userId, String stockLocation);
+    List<Inventory> findAllByUserIdAndCategoryAndStockLocationOrderByUpdatedAtDesc(Long userId, String category, String stockLocation);
 }

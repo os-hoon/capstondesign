@@ -77,6 +77,18 @@ public class InventoryController {
         return ApiResponse.onSuccess(inventoryService.findFilteredInventory(selectedCategory, filter));
     }
 
+    @GetMapping("/filter")
+    public ApiResponse<?> getFilteredInventoryWithStockLocation(@RequestParam(value = "category", required = false) String category,
+                                                                @RequestParam("filter") String filter,
+                                                                @RequestParam(value = "stockLocation", required = false) String stockLocation) {
+        // category와 stockLocation이 선택되지 않았을 경우 null 처리
+        String selectedCategory = (category == null || category.equals("")) ? null : category.trim();
+        String selectedStockLocation = (stockLocation == null || stockLocation.equals("")) ? null : stockLocation.trim();
+
+        // 서비스에서 필터링된 결과를 가져옵니다.
+        return ApiResponse.onSuccess(inventoryService.findFilteredInventoryWithStockLocation(selectedCategory, filter, selectedStockLocation));
+    }
+
 
 
 }
