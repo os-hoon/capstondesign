@@ -100,6 +100,7 @@ public class InventoryServiceImpl implements InventoryService {
     private InventoryDTO convertToInventoryDTO(Inventory inventory) {
         return new InventoryDTO(
                 inventory.getProductName(),
+                inventory.getPurchase_date(),
                 inventory.getExpiration_date(),
                 inventory.getQuantity(),
                 inventory.getStockLocation(),
@@ -127,6 +128,7 @@ public class InventoryServiceImpl implements InventoryService {
         Inventory inventory = new Inventory();
         inventory.setUser(user);  // User 객체 설정
         inventory.setProductName(inventoryDTO.getProductName());
+        inventory.setPurchase_date(inventoryDTO.getPurchase_date());
         inventory.setExpiration_date(inventoryDTO.getExpiration_date());
         inventory.setQuantity(inventoryDTO.getQuantity());
         inventory.setStockLocation(inventoryDTO.getStockLocation());
@@ -141,6 +143,7 @@ public class InventoryServiceImpl implements InventoryService {
                 .orElseThrow(() -> new BaseException(ErrorCode._INVENTORY_NOT_FOUND));
 
         inventory.setProductName(inventoryDTO.getProductName());
+        inventory.setPurchase_date(inventoryDTO.getPurchase_date());
         inventory.setExpiration_date(inventoryDTO.getExpiration_date());
         inventory.setQuantity(inventoryDTO.getQuantity());
         inventory.setStockLocation(inventoryDTO.getStockLocation());
