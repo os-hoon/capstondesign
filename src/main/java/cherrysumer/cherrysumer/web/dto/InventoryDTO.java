@@ -26,7 +26,7 @@ public class InventoryDTO {
     private LocalDateTime expiration_date;
 
     @NotNull(message = "수량을 입력하세요.")
-    private int quantity;
+    private Integer quantity;
 
     private String stockLocation;
 

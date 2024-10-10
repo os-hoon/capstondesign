@@ -37,7 +37,7 @@ public class Inventory extends BaseEntity{
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")*/
     private LocalDateTime expiration_date;
 
-    private int quantity;
+    private Integer quantity;
 
     private String stockLocation;
 
