@@ -40,7 +40,7 @@ public class MyPageController {
     }
 
     // 프로필 조회
-    @GetMapping("/profile/check")
+    @GetMapping("/profile")
     public ApiResponse<ProfileDTO> getProfile(@AuthenticationPrincipal User user) {
         Long userId = Long.parseLong(user.getUsername());
         ProfileDTO profile = myPageService.getProfile(userId);
@@ -48,7 +48,7 @@ public class MyPageController {
     }
 
     // 프로필 수정
-    @PostMapping("/profile/check/modify")
+    @PostMapping("/profile/modify")
     public ApiResponse<?> modifyProfile(@AuthenticationPrincipal User user, @RequestBody ProfileDTO profileDTO) {
         Long userId = Long.parseLong(user.getUsername());
         myPageService.modifyProfile(userId, profileDTO);
