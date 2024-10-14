@@ -12,11 +12,10 @@ import cherrysumer.cherrysumer.service.ParticipateService;
 import cherrysumer.cherrysumer.web.dto.UserRequestDTO;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -49,9 +48,11 @@ public class MyPageController {
 
     // 프로필 수정
     @PostMapping("/profile/modify")
-    public ApiResponse<?> modifyProfile(@AuthenticationPrincipal User user, @RequestBody ProfileDTO profileDTO) {
+    public ApiResponse<?> modifyProfile(@AuthenticationPrincipal User user,
+                                        @RequestPart(value = "dto") ProfileDTO profileDTO,
+                                        @RequestPart("file") MultipartFile file) {
         Long userId = Long.parseLong(user.getUsername());
-        myPageService.modifyProfile(userId, profileDTO);
+        myPageService.modifyProfile(userId, profileDTO,file);
         return ApiResponse.onSuccess("프로필이 성공적으로 수정되었습니다.");
     }
 
