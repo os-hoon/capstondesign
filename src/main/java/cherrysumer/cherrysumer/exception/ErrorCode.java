@@ -31,6 +31,7 @@ public enum ErrorCode {
     _USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U404", "사용자를 찾을 수 없습니다."),
     _PARTICIPATE_NOT_FOUND(HttpStatus.NOT_FOUND, "A404", "신청하지 않은 사용자입니다."),
     _PARTICIPATE_CONFLICT(HttpStatus.CONFLICT, "A409", "이미 신청한 공구입니다."),
+    _IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "U405", "이미지를 찾을 수 없습니다."),
 
 
     //post error

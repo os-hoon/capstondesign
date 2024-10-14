@@ -32,4 +32,6 @@ public interface UserService {
     Point convertPoint(String longitude, String latitude) throws ParseException;
 
     UserResponseDTO.successLoginDTO loginAuth();
+
+    void updateProfileImage(UserRequestDTO.updateProfileImageDTO updateProfileImageDTO);
 }

@@ -177,4 +177,15 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(Long.parseLong(userId))
                 .orElseThrow(() -> new UserErrorHandler(ErrorCode._USER_NOT_FOUND));
     }
+
+    // 프로필 이미지 업데이트 메서드
+    @Override
+    public void updateProfileImage(UserRequestDTO.updateProfileImageDTO updateProfileImageDTO) {
+        User user = userRepository.findByLoginId(updateProfileImageDTO.getLoginId())
+                .orElseThrow(() -> new UserErrorHandler(ErrorCode._USER_NOT_FOUND));
+
+        // 프로필 이미지 경로 업데이트
+        user.setProfileImageUrl(updateProfileImageDTO.getImagePath());
+        userRepository.save(user);
+    }
 }

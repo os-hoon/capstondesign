@@ -102,4 +102,12 @@ public class UserRequestDTO {
         //0: 승인, 1: 거절
         String isConfirmed;
     }
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class updateProfileImageDTO {
+        private String loginId;  // 로그인 ID
+        private String imagePath;  // 프로필 이미지 경로
+    }
+
 }
