@@ -44,13 +44,14 @@ public class MyPageServiceImpl implements MyPageService {
             user.setNickname(profileDTO.getNickname());
             user.setEmail(profileDTO.getEmail());
 
-            // 파일 업로드 처리
-            String filePath = imageUploadService.uploadImage(file);
+            // 프로필 이미지 파일이 비어 있지 않은 경우에만 업데이트
+            if (file != null && !file.isEmpty()) {
+                // 파일 업로드 처리
+                String filePath = imageUploadService.uploadImage(file);
 
-
-
-            // 프로필 이미지 경로 업데이트
-            user.setProfileImageUrl(filePath);
+                // 프로필 이미지 경로 업데이트
+                user.setProfileImageUrl(filePath);
+            };
             userRepository.save(user);
 
 
