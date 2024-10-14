@@ -3,6 +3,7 @@ import cherrysumer.cherrysumer.domain.User;
 import cherrysumer.cherrysumer.exception.ErrorCode;
 import cherrysumer.cherrysumer.repository.UserRepository;
 import cherrysumer.cherrysumer.service.ImageUploadService;
+import cherrysumer.cherrysumer.service.UserService;
 import cherrysumer.cherrysumer.util.ApiResponse;
 import cherrysumer.cherrysumer.web.dto.ImageUploadDTO;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class ImageUploadController {
 
     private final ImageUploadService imageUploadService;
     private final UserRepository userRepository;
+    private final UserService userService;
 
     // 이미지 업로드 및 사용자 프로필 이미지 업데이트 API
     @PostMapping("/upload")
@@ -30,13 +32,11 @@ public class ImageUploadController {
             // 파일 업로드 처리
             String filePath = imageUploadService.uploadImage(file);
 
-            // 인증된 사용자 정보 가져오기
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            User authenticatedUser = (User) authentication.getPrincipal();
+            User user = userService.getLoggedInUser();
 
             // 프로필 이미지 경로 업데이트
-            authenticatedUser.setProfileImageUrl(filePath);
-            userRepository.save(authenticatedUser);
+            user.setProfileImageUrl(filePath);
+            userRepository.save(user);
 
             // 업로드된 이미지 경로 반환
             ImageUploadDTO imageUploadDTO = new ImageUploadDTO(filePath);
