@@ -97,16 +97,16 @@ public class UserController {
 
     // 프로필 이미지 업로드 API
     @PutMapping("/profile-image")
-    public ApiResponse<?> uploadProfileImage(@RequestPart("file") MultipartFile file,@RequestBody UserRequestDTO.updateProfileImageDTO request) {
+    public ApiResponse<?> uploadProfileImage(@RequestPart("file") MultipartFile file,@AuthenticationPrincipal User authenticatedUser) {
         try {
             // 파일 업로드 처리
             String filePath = fileUploadService.uploadProfileImage(file);
 
-            // DTO로 이미지 경로 전달
-            request.setImagePath(filePath);
+            // 이미지 경로 DTO 생성
+            UserRequestDTO.updateProfileImageDTO updateProfileImageDTO = new UserRequestDTO.updateProfileImageDTO(filePath);
 
             // 유저의 프로필 이미지 경로 업데이트
-            userService.updateProfileImage(request);
+            userService.updateProfileImage(authenticatedUser, updateProfileImageDTO);
 
             return ApiResponse.onSuccess("프로필 이미지가 성공적으로 업로드되었습니다.");
         } catch (IOException e) {

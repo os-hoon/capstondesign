@@ -33,5 +33,5 @@ public interface UserService {
 
     UserResponseDTO.successLoginDTO loginAuth();
 
-    void updateProfileImage(UserRequestDTO.updateProfileImageDTO updateProfileImageDTO);
+    void updateProfileImage(User user, UserRequestDTO.updateProfileImageDTO updateProfileImageDTO);
 }

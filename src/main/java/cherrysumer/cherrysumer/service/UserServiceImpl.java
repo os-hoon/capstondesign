@@ -180,12 +180,9 @@ public class UserServiceImpl implements UserService {
 
     // 프로필 이미지 업데이트 메서드
     @Override
-    public void updateProfileImage(UserRequestDTO.updateProfileImageDTO updateProfileImageDTO) {
-        User user = userRepository.findByLoginId(updateProfileImageDTO.getLoginId())
-                .orElseThrow(() -> new UserErrorHandler(ErrorCode._USER_NOT_FOUND));
-
-        // 프로필 이미지 경로 업데이트
+    public void updateProfileImage(User user, UserRequestDTO.updateProfileImageDTO updateProfileImageDTO) {
+        // 이미 인증된 User 객체에서 프로필 이미지 경로 업데이트
         user.setProfileImageUrl(updateProfileImageDTO.getImagePath());
-        userRepository.save(user);
+        userRepository.save(user);  // 프로필 이미지 경로를 DB에 저장
     }
 }

@@ -106,7 +106,6 @@ public class UserRequestDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class updateProfileImageDTO {
-        private String loginId;  // 로그인 ID
         private String imagePath;  // 프로필 이미지 경로
     }
 
