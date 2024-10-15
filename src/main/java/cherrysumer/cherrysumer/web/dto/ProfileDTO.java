@@ -21,4 +21,6 @@ public class ProfileDTO {
     private String email;
 
     private String region;  // 현재 거주 지역
+
+    private String profileImageUrl;
 }

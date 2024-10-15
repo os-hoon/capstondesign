@@ -27,7 +27,7 @@ public class MyPageServiceImpl implements MyPageService {
                 .orElseThrow(() -> new BaseException(ErrorCode._USER_NOT_FOUND));
 
         // 프로필 정보 반환
-        return new ProfileDTO(user.getName(), user.getNickname(), user.getEmail(), user.getRegion());
+        return new ProfileDTO(user.getName(), user.getNickname(), user.getEmail(), user.getRegion(),user.getProfileImageUrl());
     }
 
     //수정하기 들어가서 아무것도 입력안하면 원래이름 닉네임 이메일 그대로 할거면 예외코드는 따로 설정 안할 예정
