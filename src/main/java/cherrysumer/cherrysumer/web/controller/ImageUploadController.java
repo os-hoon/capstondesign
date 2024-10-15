@@ -1,4 +1,4 @@
-/*package cherrysumer.cherrysumer.web.controller;
+package cherrysumer.cherrysumer.web.controller;
 import cherrysumer.cherrysumer.domain.User;
 import cherrysumer.cherrysumer.exception.ErrorCode;
 import cherrysumer.cherrysumer.repository.UserRepository;
@@ -26,28 +26,7 @@ public class ImageUploadController {
     private final UserRepository userRepository;
     private final UserService userService;
 
-    // 이미지 업로드 및 사용자 프로필 이미지 업데이트 API
-    @PostMapping("/upload")
-    public ApiResponse<?> uploadImage(@RequestPart("file") MultipartFile file) {
 
-        try {
-            // 파일 업로드 처리
-            String filePath = imageUploadService.uploadImage(file);
-
-            User user = userService.getLoggedInUser();
-
-            // 프로필 이미지 경로 업데이트
-            user.setProfileImageUrl(filePath);
-            userRepository.save(user);
-
-            // 업로드된 이미지 경로 반환
-            ImageUploadDTO imageUploadDTO = new ImageUploadDTO(filePath);
-
-            return ApiResponse.onSuccess(imageUploadDTO);
-        } catch (IOException e) {
-            return ApiResponse.onFailure(ErrorCode._IMAGE_NOT_FOUND,"업로드 실패");
-        }
-    }
 
     // 이미지 조회 API
     @GetMapping("/view/{fileName}")
@@ -73,4 +52,4 @@ public class ImageUploadController {
             return ApiResponse.onFailure(ErrorCode._IMAGE_NOT_FOUND, "잘못된 파일 경로입니다.");
         }
     }
-}*/
+}
