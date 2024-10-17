@@ -32,7 +32,7 @@ public class ImageUploadController {
     public ResponseEntity<Resource> viewImage(@PathVariable String fileName) {
         try {
             // 파일 경로
-            Path filePath = Paths.get("/home/ubuntu/images/" + fileName);
+            Path filePath = Paths.get("home/ubuntu/images/" + fileName);
 
             // 이미지 파일을 Resource로 읽기
             Resource resource = new UrlResource(filePath.toUri());
