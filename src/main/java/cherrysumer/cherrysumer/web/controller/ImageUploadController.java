@@ -26,13 +26,14 @@ import java.nio.file.Paths;
 @RequestMapping("/image")
 @RequiredArgsConstructor
 public class ImageUploadController {
-
+    private final String uploadDir = "/home/ubuntu/images";  // 이미지가 저장될 경로
     // 이미지 조회 API
     @GetMapping("/view/{fileName}")
     public ResponseEntity<Resource> viewImage(@PathVariable String fileName) {
         try {
+
             // 파일 경로
-            Path filePath = Paths.get("/home/ubuntu/images/" + fileName);
+            Path filePath = Paths.get(uploadDir,fileName);
 
             // 이미지 파일을 Resource로 읽기
             Resource resource = new UrlResource(filePath.toUri());
