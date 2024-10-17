@@ -28,6 +28,6 @@ public class ImageUploadServiceImpl implements ImageUploadService {
         Files.write(path, file.getBytes());  // 파일을 지정된 경로에 저장
 
         // 절대 경로 리턴
-        return path.toString();
+        return newFileName;
     }
 }
