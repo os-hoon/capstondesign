@@ -25,7 +25,8 @@ public class SecurityConfig {
 
     private static final String[] permitRequest = {
             "/user/**",
-            "/inventory/**"  // 재고 조회 관련 요청 허용
+            "/inventory/**",
+            "/image/**"// 재고 조회 관련 요청 허용
     };
 
     @Bean
