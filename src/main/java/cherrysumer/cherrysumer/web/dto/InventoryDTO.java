@@ -21,8 +21,6 @@ public class InventoryDTO {
     @NotNull(message = "구매날짜을 입력하세요.")
     private LocalDateTime purchase_date;
 
-    @NotNull(message = "만료날짜을 입력하세요.")
-    /*@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")*/
     private LocalDateTime expiration_date;
 
     @NotNull(message = "수량을 입력하세요.")

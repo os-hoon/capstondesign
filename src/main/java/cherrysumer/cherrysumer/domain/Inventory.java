@@ -32,9 +32,7 @@ public class Inventory extends BaseEntity{
     private String productName;
 
     private LocalDateTime purchase_date;
-
-    /*@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")*/
+    
     private LocalDateTime expiration_date;
 
     private Integer quantity;
