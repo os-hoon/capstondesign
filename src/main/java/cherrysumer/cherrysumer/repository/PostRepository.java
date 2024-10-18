@@ -19,10 +19,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     //List<Post> searchByDetailed_category(String q);
 
 
-    @Query("SELECT p FROM Post p WHERE p.title LIKE %:keyword% OR p.place LIKE %:keyword% OR p.content LIKE %:keyword% OR p.category LIKE %:keyword%")
+    @Query("SELECT p FROM Post p WHERE p.title LIKE %:keyword% OR p.place LIKE %:keyword% OR p.content LIKE %:keyword%")
     List<Post> searchByKeyword(@Param("keyword") String keyword);
 
-    @Query(value = "SELECT * FROM post p WHERE JSON_CONTAINS(p.detailed_category, JSON_QUOTE(:keyword))", nativeQuery = true)
+    @Query(value = "SELECT * FROM post p WHERE JSON_CONTAINS(p.detailed_category, JSON_QUOTE(:keyword)) OR JSON_CONTAINS(p.category, JSON_QUOTE(:keyword))", nativeQuery = true)
     List<Post> searchByKeywordNative(@Param("keyword") String keyword);
 
     @Query("SELECT p FROM Post p WHERE p.regionCode = :regionCode And p.category in(:category)")

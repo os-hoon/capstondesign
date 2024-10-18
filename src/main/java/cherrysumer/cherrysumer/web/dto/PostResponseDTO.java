@@ -97,6 +97,7 @@ public class PostResponseDTO {
     public static class likePostDTO {
         private Long postId;
         private boolean like_status;
+        private int likes;
     }
 
     @Getter
@@ -135,6 +136,7 @@ public class PostResponseDTO {
         private Long postId;
         private String writer;
         private List<String> detail_category;
+        private List<String> category;
         private String title;
         private String productname;
         private String upload;
@@ -142,6 +144,7 @@ public class PostResponseDTO {
         private LocalDateTime date;
         private int capacity;
         private String content;
+        private String place;
 
         private int likes;
         private boolean like_status;
@@ -154,12 +157,14 @@ public class PostResponseDTO {
             this.postId = p.getId();
             this.writer = p.getUser().getNickname();
             this.detail_category = p.getDetailed_category();
+            this.category = p.getCategory();
             this.title = p.getTitle();
             this.productname = p.getProductname();
             this.price = (int) Math.round(p.getPrice() / (double) p.getCapacity());
             this.date = p.getDate();
             this.capacity = p.getCapacity();
             this.content = p.getContent();
+            this.place = p.getPlace();
 
             this.upload = upload;
             this.likes = likes;

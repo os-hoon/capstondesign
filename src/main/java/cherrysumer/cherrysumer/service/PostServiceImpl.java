@@ -17,6 +17,7 @@ import cherrysumer.cherrysumer.web.dto.PostResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.io.ParseException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -96,7 +97,8 @@ public class PostServiceImpl implements PostService{
                 break;
             case "추천순":
                 posts = posts.stream()
-                        .sorted(Comparator.comparingInt(p -> userCate.contains(p.getCategory()) ? 0 : 1))
+                        .sorted(Comparator.comparingInt(p -> p.getCategory().stream()
+                                .anyMatch(userCate::contains) ? 0 : 1))
                         .collect(Collectors.toList());
                 break;
             case "인기순":
@@ -117,16 +119,20 @@ public class PostServiceImpl implements PostService{
 
     // 게시글 삭제
     @Override
+    @Transactional
     public void deletePost(Long postId) {
         delete(postId);
     }
 
+    //@Transactional
     private void delete(Long postId) {
         User user = userService.getLoggedInUser();
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostErrorHandler(ErrorCode._POST_NOT_FOUND));
 
         if(post.getUser().equals(user)) {
+            participateRepository.deleteAllparticipate(post);
+            likesRepository.deleteAlllikes(post);
             postRepository.delete(post);
         } else
             throw new PostErrorHandler(ErrorCode._POST_FORBIDDEN);
@@ -205,29 +211,35 @@ public class PostServiceImpl implements PostService{
     // 게시글 관심 목록 추가, 삭제
     @Override
     public PostResponseDTO.likePostDTO likePost(Long postId) {
-        PostLikes like = likes(postId);
-        return new PostResponseDTO.likePostDTO(postId, like.isStatus());
+        return likes(postId);
+        //boolean like = likes(postId);
+        //return new PostResponseDTO.likePostDTO(postId, like);
     }
 
-    private PostLikes likes(Long postId) {
+    private PostResponseDTO.likePostDTO likes(Long postId) {
         User user = userService.getLoggedInUser();
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostErrorHandler(ErrorCode._POST_NOT_FOUND));
 
-        PostLikes like;
+        boolean status;
         if(likesRepository.existsByPostAndUser(post, user)) {
-            like = likesRepository.findByPostAndUser(post,user);
-            like.setStatus(!like.isStatus());
-            likesRepository.save(like);
+            PostLikes like = likesRepository.findByPostAndUser(post,user);
+            //like.setStatus(!like.isStatus());
+            likesRepository.delete(like);
+            status = false;
         } else {
-            like = new PostLikes();
+            PostLikes like = new PostLikes();
             like.setPost(post);
             like.setUser(user);
-            like.setStatus(true);
+            likesRepository.save(like);
+            status = true;
+            //like.setStatus(true);
         }
 
-        likesRepository.save(like);
-        return like;
+        int likes = likesRepository.countByPost(post).intValue();
+        return new PostResponseDTO.likePostDTO(postId, status, likes);
+        //likesRepository.save(like);
+        //return like;
     }
 
     // 공구 마감
@@ -306,13 +318,13 @@ public class PostServiceImpl implements PostService{
     public List<PostResponseDTO.postDTO> searchPosts(String q, List<String> category, String filter) {
         User user = userService.getLoggedInUser();
 
-        List<Post> sortPost = (category == null) ? postRepository.findAllByRegionCode(user.getRegionCode()) :
-                postRepository.findAllPost(user.getRegionCode(), category);
+        //List<Post> sortPost = (category == null) ? postRepository.findAllByRegionCode(user.getRegionCode()) :
+                //postRepository.findAllPost(user.getRegionCode(), category);
 
         Set<Post> set = new HashSet<>();
         set.addAll(postRepository.searchByKeyword(q));
         set.addAll(postRepository.searchByKeywordNative(q));
-        set.addAll(sortPost);
+        //set.addAll(sortPost);
 
         List<Post> posts = filterPost(user, new ArrayList<>(set), filter);
 
@@ -323,14 +335,15 @@ public class PostServiceImpl implements PostService{
 
     // post 응답 객체 변환
     private PostResponseDTO.postDTO convertPost(Post p, User u) {
-        int likes = Integer.parseInt(String.valueOf(likesRepository.countByPost(p)));
-        boolean status;
+        int likes = likesRepository.countByPost(p).intValue();
+        boolean status = likesRepository.existsByPostAndUser(p, u);
 
-        if(likesRepository.existsByPostAndUser(p, u)) {
-            status = likesRepository.findByPostAndUser(p, u).isStatus();
+        /*if(likesRepository.existsByPostAndUser(p, u)) {
+            status = true;
+            //status = likesRepository.findByPostAndUser(p, u).isStatus();
         } else {
             status = false;
-        }
+        }*/
 
         String upload = TimeUtil.convertTime(p.getUpdatedAt());
         PostResponseDTO.postDTO post = new PostResponseDTO.postDTO(p, likes, status, upload);
@@ -340,16 +353,17 @@ public class PostServiceImpl implements PostService{
 
     private PostResponseDTO.detailPostDTO convertDetailPost(Post p, User u) {
         //detailPostDTO(Post p, String upload, int likes, boolean like_status, boolean isAuthor, boolean isJoin)
-        int likes = Integer.parseInt(String.valueOf(likesRepository.countByPost(p)));
-        boolean status;
+        int likes = likesRepository.countByPost(p).intValue();
+        boolean status = likesRepository.existsByPostAndUser(p, u);
 
-        if(likesRepository.existsByPostAndUser(p, u)) {
-            status = likesRepository.findByPostAndUser(p, u).isStatus();
+        /*if(likesRepository.existsByPostAndUser(p, u)) {
+            status = true;
+            //status = likesRepository.findByPostAndUser(p, u).isStatus();
         } else {
             status = false;
-        }
+        }*/
 
-        String upload = TimeUtil.convertTime(p.getCreatedAt());
+        String upload = TimeUtil.convertTime(p.getUpdatedAt());
 
         boolean isAuthor = p.getUser().equals(u);
         boolean isJoin = participateRepository.existsByPostAndUser(p, u);

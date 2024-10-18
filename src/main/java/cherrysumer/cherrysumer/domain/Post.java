@@ -44,7 +44,9 @@ public class Post extends BaseEntity{
 
     private String content;
 
-    private String category;
+    @Column(name = "category", columnDefinition = "json")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private List<String> category;
 
     @Column(name = "detailed_category", columnDefinition = "json")
     @JdbcTypeCode(SqlTypes.JSON)

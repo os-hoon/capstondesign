@@ -34,7 +34,7 @@ public class PostRequestDTO {
 
         private String content;
 
-        private String category;
+        private List<String> category;
 
         private List<String> detailed_category;
 

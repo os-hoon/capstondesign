@@ -27,10 +27,10 @@ public class PostController {
     @GetMapping("")
     public ApiResponse<?> inquiryPosts(@RequestParam(value = "category") String category,
                                        @RequestParam("filter") String filter) {
-        List<String> categorys = (category.equals("")) ? null :
+        List<String> categorys = (category.equals("") || category.equals("전체")) ? null :
                 Arrays.stream(category.split(","))
                 .map(String::trim) // 각 요소의 앞뒤 공백 제거
-                .collect(Collectors.toList());;
+                .collect(Collectors.toList());
         return ApiResponse.onSuccess(postService.findRegionPosts(categorys, filter));
     }
 
@@ -63,10 +63,10 @@ public class PostController {
     @GetMapping("/search")
     public ApiResponse<?> searchPost(@RequestParam("q") String q, @RequestParam(value = "category") String category,
                                      @RequestParam("filter") String filter) {
-        List<String> categorys = (category.equals("")) ? null :
+        List<String> categorys = (category.equals("") || category.equals("전체")) ? null :
                 Arrays.stream(category.split(","))
                         .map(String::trim) // 각 요소의 앞뒤 공백 제거
-                        .collect(Collectors.toList());;
+                        .collect(Collectors.toList());
         return ApiResponse.onSuccess(postService.searchPosts(q, categorys, filter));
     }
 

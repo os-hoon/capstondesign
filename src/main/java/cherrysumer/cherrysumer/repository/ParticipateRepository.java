@@ -4,6 +4,7 @@ import cherrysumer.cherrysumer.domain.Participate;
 import cherrysumer.cherrysumer.domain.Post;
 import cherrysumer.cherrysumer.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -39,4 +40,8 @@ public interface ParticipateRepository extends JpaRepository<Participate, Long> 
 
     @Query("SELECT p FROM Participate p WHERE p.post = :post and p.status = '미확인'")
     List<Participate> searchByConfirm(@Param("post") Post post);
+
+    @Modifying
+    @Query("DELETE FROM Participate p where p.post = :post")
+    void deleteAllparticipate(@Param("post") Post post);
 }

@@ -97,7 +97,7 @@ public class ParticipateServiceImpl implements ParticipateService{
         Post post = postRepository.findById(request.getPostId())
                 .orElseThrow(() -> new PostErrorHandler(ErrorCode._POST_NOT_FOUND));
 
-        // 신청 유저 == 작성자
+        // 요청 유저 != 작성자
         if(!post.getUser().equals(author))
             throw new PostErrorHandler(ErrorCode._POST_FORBIDDEN);
         // 마감된 모집, 승인한 사용자
