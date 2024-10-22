@@ -46,5 +46,5 @@ public class User extends BaseEntity{
     private String regionCode;
 
     // 프로필 이미지 경로 저장
-    private String profileImageUrl;  // /home/ubuntu/images 경로에 저장된 이미지의 절대 경로
+    private String profileImageUrl;
 }

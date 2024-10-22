@@ -12,6 +12,7 @@ import cherrysumer.cherrysumer.service.ParticipateService;
 import cherrysumer.cherrysumer.web.dto.UserRequestDTO;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.io.ParseException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +59,7 @@ public class MyPageController {
 
     // 내 동네 설정
     @PostMapping("/region")
-    public ApiResponse<?> setRegion(@AuthenticationPrincipal User user, @RequestBody RegionDTO regionDTO) {
+    public ApiResponse<?> setRegion(@AuthenticationPrincipal User user, @RequestBody RegionDTO regionDTO) throws ParseException {
         Long userId = Long.parseLong(user.getUsername());
         myPageService.setRegion(userId, regionDTO);
         return ApiResponse.onSuccess("동네가 성공적으로 설정되었습니다.");

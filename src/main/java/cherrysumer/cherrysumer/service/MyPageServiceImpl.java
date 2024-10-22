@@ -4,10 +4,12 @@ import cherrysumer.cherrysumer.domain.User;
 import cherrysumer.cherrysumer.exception.BaseException;
 import cherrysumer.cherrysumer.exception.ErrorCode;
 import cherrysumer.cherrysumer.repository.UserRepository;
-import cherrysumer.cherrysumer.util.ApiResponse;
-import cherrysumer.cherrysumer.web.dto.ProfileDTO;
-import cherrysumer.cherrysumer.web.dto.RegionDTO;
+import cherrysumer.cherrysumer.util.jwt.TokenProvider;
+import cherrysumer.cherrysumer.web.dto.*;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +21,7 @@ public class MyPageServiceImpl implements MyPageService {
 
     private final UserRepository userRepository;
     private final ImageUploadService imageUploadService;
+    private final TokenProvider tokenProvider;
 
     @Override
     public ProfileDTO getProfile(Long userId) {
@@ -30,7 +33,7 @@ public class MyPageServiceImpl implements MyPageService {
         String imageUrl = user.getProfileImageUrl() != null ? "/image/view/" + user.getProfileImageUrl() : null;
 
         // 프로필 정보 반환
-        return new ProfileDTO(user.getName(), user.getNickname(), user.getEmail(), user.getRegion(),imageUrl);
+        return new ProfileDTO(user.getName(), user.getNickname(), user.getEmail(),imageUrl);
     }
 
     //수정하기 들어가서 아무것도 입력안하면 원래이름 닉네임 이메일 그대로 할거면 예외코드는 따로 설정 안할 예정
@@ -65,17 +68,36 @@ public class MyPageServiceImpl implements MyPageService {
 
     }
 
-    //동네설정은 아직 피그마에도 안나와서 일단 이런식으로 임시로 만들어둠
     @Override
-    public void setRegion(Long userId, RegionDTO regionDTO) {
+    public RegionResponseDTO.successregionDTO setRegion(Long userId, RegionDTO request)throws ParseException {
         // 사용자 찾기
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode._USER_NOT_FOUND));
 
-        // 동네 설정
-        user.setRegion(regionDTO.getRegion());
+        user.setRegion(request.getRegion());
+        user.setRegionCode(request.getRegionCode());
+        user.setPoint(convertPoint(request.getLongitude(), request.getLatitude()));
         userRepository.save(user);
+
+
+        return new RegionResponseDTO.successregionDTO(user.getRegion());
+
     }
+
+    @Override
+    public Point convertPoint(String longitude, String latitude) throws ParseException {
+        if(longitude == null || longitude.equals("") || latitude == null || latitude.equals(""))
+            return null;
+
+        Double lng = Double.parseDouble(longitude);
+        Double lti = Double.parseDouble(latitude);
+
+        String pointWKT = String.format("POINT(%s %s)", lng, lti);
+        Point point = (Point) new WKTReader().read(pointWKT);
+
+        return point;
+    }
+
 
     @Override
     public Object getAnnouncements() {

@@ -9,4 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RegionDTO {
     private String region;  // 사용자의 현재 거주지
+
+    private String regionCode;
+
+    private String longitude; // 경도
+
+    private String latitude; // 위도
 }
