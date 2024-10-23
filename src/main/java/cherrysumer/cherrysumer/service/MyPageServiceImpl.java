@@ -99,9 +99,4 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
 
-    @Override
-    public Object getAnnouncements() {
-        // 공지사항 조회 로직 (필요시 구현)
-        return null;
-    }
 }

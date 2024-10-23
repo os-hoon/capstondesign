@@ -65,11 +65,6 @@ public class MyPageController {
         return ApiResponse.onSuccess("동네가 성공적으로 설정되었습니다.");
     }
 
-    // 공지사항 조회
-    @GetMapping("/announcement")
-    public ApiResponse<?> getAnnouncements() {
-        return ApiResponse.onSuccess(myPageService.getAnnouncements());
-    }
 
     // 참여 신청자 목록 조회
     @GetMapping("/participations/{postId}")
