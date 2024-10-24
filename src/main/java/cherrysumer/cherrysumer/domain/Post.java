@@ -1,8 +1,10 @@
 package cherrysumer.cherrysumer.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -55,9 +57,27 @@ public class Post extends BaseEntity{
     // 동네
     private String regionCode;
 
-    private boolean isClosed;
+    private boolean isClosed; // 마감 여부
 
     // 재고 등록 여부
     //private boolean isRegist;
 
+    private boolean isCompleted; // 거래 완료 여부
+
+    @Column(name = "postImage", columnDefinition = "json")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private List<Image> postImage;
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Image {
+        @JsonProperty("originfilename")
+        private String originfilename;
+
+        @JsonProperty("imagepath")
+        private String imagepath;
+    }
+
 }
+

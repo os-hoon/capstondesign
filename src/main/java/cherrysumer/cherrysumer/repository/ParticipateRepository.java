@@ -21,15 +21,17 @@ public interface ParticipateRepository extends JpaRepository<Participate, Long> 
     //@Query("select P.post from Participate p where P.user = :u")
     //List<Post> findAllByUser(@Param("u") User user);
 
-    List<Participate> findAllByUser(User user);
+    @Query("SELECT p FROM Participate p WHERE p.status != '게시자' AND p.user = :user")
+    List<Participate> findAllByUser(@Param("user") User user);
 
-    List<Participate> findAllByPost(Post post);
+    @Query("SELECT p FROM Participate p WHERE p.status != '게시자' AND p.post = :post")
+    List<Participate> findAllByPost(@Param("post") Post post);
 
-    @Query("SELECT p FROM Participate p WHERE p.status = '승인'")
-    List<Participate> findAllByPost0(Post post);
+    @Query("SELECT p FROM Participate p WHERE p.status = '승인' AND p.post = :post")
+    List<Participate> findAllByPost0(@Param("post") Post post);
 
-    @Query("SELECT p FROM Participate p WHERE p.status = '거절'")
-    List<Participate> findAllByPost1(Post post);
+    @Query("SELECT p FROM Participate p WHERE p.status = '거절' AND p.post = :post")
+    List<Participate> findAllByPost1(@Param("post") Post post);
 
     boolean existsByPostAndUser(Post post, User user);
 

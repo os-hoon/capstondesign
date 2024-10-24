@@ -24,4 +24,6 @@ public class Participate extends BaseEntity{
 
     // 0 : 승인, 1 : 거절, 2 : 미확인
     private String status;
+
+    private boolean isRegistered;
 }

@@ -1,13 +1,17 @@
 package cherrysumer.cherrysumer.web.dto;
 
 import cherrysumer.cherrysumer.domain.Post;
+import cherrysumer.cherrysumer.domain.User;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PostResponseDTO {
 
@@ -16,6 +20,7 @@ public class PostResponseDTO {
     @AllArgsConstructor
     public static class postDTO {
         private Long postId;
+        private String imageUrl;
         private String title;
         private String productname;
         private String region;
@@ -33,6 +38,8 @@ public class PostResponseDTO {
 
         public postDTO(Post p, int likes, boolean like_status, String upload) {
             this.postId = p.getId();
+            this.imageUrl = (p.getPostImage() == null || p.getPostImage().isEmpty()) ?
+                    null : "/image/view/" + p.getPostImage().get(0).getImagepath();
             this.title = p.getTitle();
             this.productname = p.getProductname();
             this.region = p.getUser().getRegion();
@@ -61,6 +68,8 @@ public class PostResponseDTO {
         private String place;
         private LocalDateTime date;
 
+        private String imageUrl;
+
         public summaryPostDTO(Post p) {
             this.postId = p.getId();
             this.title = p.getTitle();
@@ -68,10 +77,13 @@ public class PostResponseDTO {
             this.place = p.getPlace();
             this.price = Math.round(p.getPrice() / p.getCapacity());
             this.date = p.getDate();
+
+            this.imageUrl = (p.getPostImage() == null || p.getPostImage().isEmpty()) ?
+                    null : "/image/view/" + p.getPostImage().get(0).getImagepath();
         }
     }
 
-    @Getter
+    /*@Getter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class recruitDTO {
@@ -89,6 +101,60 @@ public class PostResponseDTO {
         private String title;
         private String productname;
         private String isConfirmed;
+    }*/
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class participateDTO {
+        private Long postId;
+        @JsonInclude(JsonInclude.Include.ALWAYS)
+        private String imageUrl;
+        private String title;
+        private String productname;
+        private LocalDate date;
+        private List<String> category;
+
+        private boolean isPurchaseCompleted; // 구매 완료 여부
+        private boolean isInventoryRegistered; // 재고 등록 여부
+        private String participationStatus; // 승인 여부 (참여)
+        private Integer applicantCount; // 신청자 수 (모집)
+        // 참여
+        public participateDTO(Post p, String isConfirmed, boolean isRegister) {
+            this.postId = p.getId();
+            this.title = p.getTitle();
+            this.productname = p.getProductname();
+            this.date = p.getDate().toLocalDate();
+            this.category = p.getCategory().stream()
+                    .filter((String c) -> !c.equals("배달"))
+                    .collect(Collectors.toList());
+
+            this.isInventoryRegistered = isRegister;
+            this.participationStatus = isConfirmed;
+            this.isPurchaseCompleted = p.isCompleted();
+
+            this.imageUrl = (p.getPostImage() == null || p.getPostImage().isEmpty()) ?
+                    null : "/image/view/" + p.getPostImage().get(0).getImagepath();
+
+        }
+        // 모집
+        public participateDTO(Post p, int number, boolean isRegister) {
+            this.postId = p.getId();
+            this.title = p.getTitle();
+            this.productname = p.getProductname();
+            this.applicantCount = number;
+            this.date = p.getDate().toLocalDate();
+            this.category = p.getCategory().stream()
+                    .filter((String c) -> !c.equals("배달"))
+                    .collect(Collectors.toList());
+
+            this.isInventoryRegistered = isRegister;
+            this.isPurchaseCompleted = p.isCompleted();
+
+            this.imageUrl = (p.getPostImage() == null || p.getPostImage().isEmpty()) ?
+                    null : "/image/view/" + p.getPostImage().get(0).getImagepath();
+        }
     }
 
     @Getter
@@ -118,10 +184,21 @@ public class PostResponseDTO {
     @AllArgsConstructor
     public static class participateUserDTO {
         private Long userId;
+        private String profileImageUrl;
         private Long postId;
         private String nickname;
         private String region;
         private String isConfirmed;
+
+        public participateUserDTO(User u, Post p, String isConfirmed) {
+            this.userId = u.getId();
+            this.profileImageUrl = (u.getProfileImageUrl() == null || u.getProfileImageUrl().isEmpty()) ?
+                    null : "/image/view/" + u.getProfileImageUrl();
+            this.postId = p.getId();
+            this.nickname = u.getNickname();
+            this.region = u.getRegion();
+            this.isConfirmed = isConfirmed;
+        }
     }
 
     @Getter
@@ -135,6 +212,7 @@ public class PostResponseDTO {
          */
         private Long postId;
         private String writer;
+        private List<String> imagefiles;
         private List<String> detail_category;
         private List<String> category;
         private String title;
@@ -173,6 +251,11 @@ public class PostResponseDTO {
             this.isClosed = p.isClosed();
             this.isAuthor = isAuthor;
             this.isJoin = isJoin;
+
+            this.imagefiles = (p.getPostImage() == null || p.getPostImage().isEmpty()) ?
+                    null : p.getPostImage().stream()
+                    .map(file -> "/image/view/" + file.getImagepath())
+                    .collect(Collectors.toList());
         }
     }
 
@@ -181,6 +264,7 @@ public class PostResponseDTO {
     @AllArgsConstructor
     public static class postDataDTO {
         private Long postId;
+        private String imageUrl;
         private String title;
         private String productname;
         private String region;
@@ -192,6 +276,9 @@ public class PostResponseDTO {
             this.productname = p.getProductname();
             this.region = p.getUser().getRegion();
             this.price = (int) Math.round(p.getPrice() / (double) p.getCapacity());
+            this.imageUrl = (p.getPostImage() == null || p.getPostImage().isEmpty()) ?
+                    null : "/image/view/" + p.getPostImage().get(0).getImagepath();
+
         }
     }
 }

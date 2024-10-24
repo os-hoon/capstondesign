@@ -18,7 +18,9 @@ import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.io.ParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,11 +33,13 @@ public class PostServiceImpl implements PostService{
     private final UserService userService;
     private final ParticipateRepository participateRepository;
     private final ParticipateService participateService;
+    private final ImageUploadService imageUploadService;
 
     // 게시글 저장
     @Override
-    public PostResponseDTO.summaryPostDTO savePost(PostRequestDTO.postDTO request) throws ParseException {
+    public PostResponseDTO.summaryPostDTO savePost(PostRequestDTO.postDTO request, List<MultipartFile> imagefile) throws ParseException, IOException {
         Post post = save(request);
+        imageUpload(imagefile, post);
         return new PostResponseDTO.summaryPostDTO(post);
     }
 
@@ -55,7 +59,40 @@ public class PostServiceImpl implements PostService{
         post.setContent(request.getContent());
         post.setRegionCode(user.getRegionCode());
         post.setClosed(false);
+        post.setClosed(false);
         post.setPoint(userService.convertPoint(request.getLongitude(), request.getLatitude()));
+        post.setPostImage(new ArrayList<>());
+
+        postRepository.save(post);
+        return application(post.getId(), "게시자");
+    }
+
+    private Post imageUpload(List<MultipartFile> imagefile, Post post) throws IOException {
+        // 저장할 이미지 리스트
+        List<Post.Image> imagePaths = new ArrayList<>();
+
+        // 기존 이미지 가져오기
+        List<String> originImage = post.getPostImage().stream()
+                .map(Post.Image::getOriginfilename)
+                .collect(Collectors.toList());
+
+        for(MultipartFile file : imagefile) {
+            // 빈파일 인 경우 넘기기
+            if(file == null || file.isEmpty())
+                continue;
+
+            String originalFilename = file.getOriginalFilename(); // 파일 이름
+            if(!originImage.contains(originalFilename)) { // 기존 리스트에 포함 x 파일인 경우 -> 새로 추가
+                String newFileName = imageUploadService.uploadImage(file);
+                Post.Image imagePath = new Post.Image(originalFilename, newFileName);
+                imagePaths.add(imagePath);
+            } else { // 기존에 있는 파일인 경우 -> 그대로 저장
+                int idx = originImage.indexOf(originalFilename);
+                imagePaths.add(post.getPostImage().get(idx));
+            }
+        }
+
+        post.setPostImage(imagePaths);
 
         return postRepository.save(post);
     }
@@ -140,9 +177,10 @@ public class PostServiceImpl implements PostService{
 
     // 게시글 수정
     @Override
-    public PostResponseDTO.detailPostDTO updatePost(PostRequestDTO.postDTO request) throws ParseException {
+    public PostResponseDTO.detailPostDTO updatePost(PostRequestDTO.postDTO request, List<MultipartFile> imagefile) throws ParseException, IOException {
         User user = userService.getLoggedInUser();
         Post post = update(request, user);
+        post = imageUpload(imagefile, post);
         return convertDetailPost(post, user);
     }
 
@@ -161,9 +199,9 @@ public class PostServiceImpl implements PostService{
         post.setPlace(request.getPlace());
         post.setDetailed_category(request.getDetailed_category());
         post.setContent(request.getContent());
-        post.setRegionCode(user.getRegionCode());
-        post.setClosed(false);
-        post.setPoint(userService.convertPoint(request.getLongitude(), request.getLatitude()));
+        //post.setRegionCode(user.getRegionCode());
+        //post.setClosed(false);
+        //post.setPoint(userService.convertPoint(request.getLongitude(), request.getLatitude()));
 
         return postRepository.save(post);
     }
@@ -180,17 +218,17 @@ public class PostServiceImpl implements PostService{
     // 공구 참여 신청
     @Override
     public PostResponseDTO.summaryPostDTO applicationPost(Long postId) {
-        Post post = application(postId);
+        Post post = application(postId, "미확인");
         return new PostResponseDTO.summaryPostDTO(post);
     }
 
-    private Post application(Long postId) {
+    private Post application(Long postId, String status) {
         User user = userService.getLoggedInUser();
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostErrorHandler(ErrorCode._POST_NOT_FOUND));
 
         // 작성자 == 신청자, 마감된 공구
-        if(post.getUser().equals(user) || post.isClosed()) {
+        if((post.getUser().equals(user) && !status.equals("게시자")) || post.isClosed()) {
             throw new PostErrorHandler(ErrorCode._POST_NOT_PARTICIPATE);
         }
 
@@ -202,7 +240,8 @@ public class PostServiceImpl implements PostService{
         Participate p = new Participate();
         p.setUser(user);
         p.setPost(post);
-        p.setStatus("미확인");
+        p.setStatus(status);
+        p.setRegistered(false);
         participateRepository.save(p);
 
         return post;
@@ -265,10 +304,11 @@ public class PostServiceImpl implements PostService{
 
     // 모집 게시글 조회
     @Override
-    public List<PostResponseDTO.recruitDTO> findRecruitList() {
-        List<Post> posts = getRecruitPosts();
-        List<PostResponseDTO.recruitDTO> list = posts.stream()
-                .map((Post p) -> convertRecruitPost(p))
+    public List<PostResponseDTO.participateDTO> findRecruitList() {
+        User user = userService.getLoggedInUser();
+        List<Post> posts = getRecruitPosts(user);
+        List<PostResponseDTO.participateDTO> list = posts.stream()
+                .map((Post p) -> convertRecruitPost(p, user))
                 .collect(Collectors.toList());
         return list;
     }
@@ -276,15 +316,15 @@ public class PostServiceImpl implements PostService{
     // 작성한 게시글 리스트
     @Override
     public List<PostResponseDTO.postDataDTO> postList() {
-        List<Post> posts = getRecruitPosts();
+        User user = userService.getLoggedInUser();
+        List<Post> posts = getRecruitPosts(user);
         List<PostResponseDTO.postDataDTO> list = posts.stream()
                 .map(PostResponseDTO.postDataDTO::new)
                 .collect(Collectors.toList());
         return list;
     }
 
-    private List<Post> getRecruitPosts() {
-        User user = userService.getLoggedInUser();
+    private List<Post> getRecruitPosts(User user) {
         List<Post> posts = postRepository.findAllByUser(user);
 
         /*if(posts.isEmpty())
@@ -371,10 +411,12 @@ public class PostServiceImpl implements PostService{
         return new PostResponseDTO.detailPostDTO(p, upload, likes, status, isAuthor, isJoin);
     }
 
-    private PostResponseDTO.recruitDTO convertRecruitPost(Post p) {
+    private PostResponseDTO.participateDTO convertRecruitPost(Post p, User u) {
         int number = Integer.parseInt(String.valueOf(participateRepository.countAllByPost(p)));
 
-        PostResponseDTO.recruitDTO post = new PostResponseDTO.recruitDTO(p.getId(), p.getTitle(), p.getProductname(), number);
+        Participate participate = participateRepository.findByPostAndUser(p, u)
+                .orElseThrow(() -> new BaseException(ErrorCode._PARTICIPATE_NOT_FOUND));
+        PostResponseDTO.participateDTO post = new PostResponseDTO.participateDTO(p, number, participate.isRegistered());
         return post;
     }
 }

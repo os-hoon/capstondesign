@@ -4,6 +4,7 @@ package cherrysumer.cherrysumer.web.controller;
 import cherrysumer.cherrysumer.service.PostService;
 import cherrysumer.cherrysumer.util.ApiResponse;
 import cherrysumer.cherrysumer.web.dto.PostRequestDTO;
+import cherrysumer.cherrysumer.web.dto.ProfileDTO;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,9 @@ import org.locationtech.jts.io.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,8 +39,9 @@ public class PostController {
 
     // 공구 게시글 작성
     @PostMapping("")
-    public ApiResponse<?> createPost(@Valid @RequestBody PostRequestDTO.postDTO request) throws ParseException {
-        return ApiResponse.onSuccess(postService.savePost(request));
+    public ApiResponse<?> createPost(@Valid @RequestPart(value = "request") PostRequestDTO.postDTO request,
+                                     @RequestPart("file") List<MultipartFile> imagefile) throws ParseException, IOException {
+        return ApiResponse.onSuccess(postService.savePost(request, imagefile));
     }
 
     // 게시글 상세 조회
@@ -55,8 +59,9 @@ public class PostController {
 
     // 게시글 수정
     @PutMapping("")
-    public ApiResponse<?> updatePost(@Valid @RequestBody PostRequestDTO.postDTO request) throws ParseException {
-        return ApiResponse.onSuccess(postService.updatePost(request));
+    public ApiResponse<?> updatePost(@Valid @RequestPart(value = "request") PostRequestDTO.postDTO request,
+                                     @RequestPart("file") List<MultipartFile> imagefile) throws ParseException, IOException {
+        return ApiResponse.onSuccess(postService.updatePost(request, imagefile));
     }
 
     // 게시글 검색

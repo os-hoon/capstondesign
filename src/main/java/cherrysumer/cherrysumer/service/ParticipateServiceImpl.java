@@ -31,18 +31,18 @@ public class ParticipateServiceImpl implements ParticipateService{
 
     // 참여 신청 게시글 조회
     @Override
-    public List<PostResponseDTO.applicationDTO> findApplicationList() {
+    public List<PostResponseDTO.participateDTO> findApplicationList() {
         return getApplicationPosts();
     }
 
-    private List<PostResponseDTO.applicationDTO> getApplicationPosts() {
+    private List<PostResponseDTO.participateDTO> getApplicationPosts() {
         User user = userService.getLoggedInUser();
         List<Participate> participates = participateRepository.findAllByUser(user);
 
         /*if(participates.isEmpty())
             throw new PostErrorHandler(ErrorCode._POST_BAD_REQUEST);*/
 
-        List<PostResponseDTO.applicationDTO> list = participates.stream()
+        List<PostResponseDTO.participateDTO> list = participates.stream()
                 .map((Participate p) -> convertApplicationPost(p))
                 .collect(Collectors.toList());
 
@@ -131,16 +131,15 @@ public class ParticipateServiceImpl implements ParticipateService{
     }
 
     // 응답 객체 변환
-    private PostResponseDTO.applicationDTO convertApplicationPost(Participate p) {
-        PostResponseDTO.applicationDTO post =
-                new PostResponseDTO.applicationDTO(p.getPost().getId(), p.getPost().getTitle(), p.getPost().getProductname(), p.getStatus());
+    private PostResponseDTO.participateDTO convertApplicationPost(Participate p) {
+        PostResponseDTO.participateDTO post =
+                new PostResponseDTO.participateDTO(p.getPost(), p.getStatus(), p.isRegistered());
         return post;
     }
 
     private PostResponseDTO.participateUserDTO convertUser(Participate p) {
         PostResponseDTO.participateUserDTO user =
-                new PostResponseDTO.participateUserDTO(p.getUser().getId(), p.getPost().getId(), p.getUser().getNickname(),
-                        p.getUser().getRegion(), p.getStatus());
+                new PostResponseDTO.participateUserDTO(p.getUser(), p.getPost(), p.getStatus());
         return user;
     }
 }

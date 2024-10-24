@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ParticipateService {
 
-    List<PostResponseDTO.applicationDTO> findApplicationList();
+    List<PostResponseDTO.participateDTO> findApplicationList();
 
     List<PostResponseDTO.participateUserDTO> participateList(Long postId, String filter);
 
