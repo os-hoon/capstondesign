@@ -32,7 +32,7 @@ public class Inventory extends BaseEntity{
     private String productName;
 
     private LocalDateTime purchase_date;
-    
+
     private LocalDateTime expiration_date;
 
     private Integer quantity;
