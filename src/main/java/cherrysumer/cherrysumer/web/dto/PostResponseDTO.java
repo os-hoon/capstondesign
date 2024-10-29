@@ -2,6 +2,7 @@ package cherrysumer.cherrysumer.web.dto;
 
 import cherrysumer.cherrysumer.domain.Post;
 import cherrysumer.cherrysumer.domain.User;
+import cherrysumer.cherrysumer.util.ConvertDate;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,7 +43,7 @@ public class PostResponseDTO {
                     null : "/image/view/" + p.getPostImage().get(0).getImagepath();
             this.title = p.getTitle();
             this.productname = p.getProductname();
-            this.region = p.getUser().getRegion();
+            this.region = p.getRegion();
             this.price = (int) Math.round(p.getPrice() / (double) p.getCapacity());
             //this.created_at = p.getCreatedAt();
 
@@ -66,7 +67,7 @@ public class PostResponseDTO {
         private String productname;
         private int price;
         private String place;
-        private LocalDateTime date;
+        private String date;
 
         private String imageUrl;
 
@@ -76,7 +77,7 @@ public class PostResponseDTO {
             this.productname = p.getProductname();
             this.place = p.getPlace();
             this.price = Math.round(p.getPrice() / p.getCapacity());
-            this.date = p.getDate();
+            this.date = ConvertDate.convertDate(p.getDate());
 
             this.imageUrl = (p.getPostImage() == null || p.getPostImage().isEmpty()) ?
                     null : "/image/view/" + p.getPostImage().get(0).getImagepath();
@@ -132,7 +133,7 @@ public class PostResponseDTO {
 
             this.isInventoryRegistered = isRegister;
             this.participationStatus = isConfirmed;
-            this.isPurchaseCompleted = p.isCompleted();
+            this.isPurchaseCompleted = (p.getDate().isBefore(LocalDateTime.now())) ? true : false;
 
             this.imageUrl = (p.getPostImage() == null || p.getPostImage().isEmpty()) ?
                     null : "/image/view/" + p.getPostImage().get(0).getImagepath();
@@ -150,7 +151,7 @@ public class PostResponseDTO {
                     .collect(Collectors.toList());
 
             this.isInventoryRegistered = isRegister;
-            this.isPurchaseCompleted = p.isCompleted();
+            this.isPurchaseCompleted = (p.getDate().isBefore(LocalDateTime.now())) ? true : false;
 
             this.imageUrl = (p.getPostImage() == null || p.getPostImage().isEmpty()) ?
                     null : "/image/view/" + p.getPostImage().get(0).getImagepath();
@@ -219,9 +220,10 @@ public class PostResponseDTO {
         private String productname;
         private String upload;
         private int price;
-        private LocalDateTime date;
+        private String date;
         private int capacity;
         private String content;
+        private String region;
         private String place;
 
         private int likes;
@@ -239,9 +241,10 @@ public class PostResponseDTO {
             this.title = p.getTitle();
             this.productname = p.getProductname();
             this.price = (int) Math.round(p.getPrice() / (double) p.getCapacity());
-            this.date = p.getDate();
+            this.date = ConvertDate.convertDate(p.getDate());
             this.capacity = p.getCapacity();
             this.content = p.getContent();
+            this.region = p.getRegion();
             this.place = p.getPlace();
 
             this.upload = upload;
@@ -274,7 +277,7 @@ public class PostResponseDTO {
             this.postId = p.getId();
             this.title = p.getTitle();
             this.productname = p.getProductname();
-            this.region = p.getUser().getRegion();
+            this.region = p.getRegion();
             this.price = (int) Math.round(p.getPrice() / (double) p.getCapacity());
             this.imageUrl = (p.getPostImage() == null || p.getPostImage().isEmpty()) ?
                     null : "/image/view/" + p.getPostImage().get(0).getImagepath();

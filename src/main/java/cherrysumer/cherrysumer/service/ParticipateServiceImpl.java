@@ -130,6 +130,19 @@ public class ParticipateServiceImpl implements ParticipateService{
         }
     }
 
+    @Override
+    public void registerInventory(Long postId) {
+        User user = userService.getLoggedInUser();
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostErrorHandler(ErrorCode._POST_NOT_FOUND));
+
+        Participate participate = participateRepository.findByPostAndUser(post, user)
+                .orElseThrow(() -> new BaseException(ErrorCode._PARTICIPATE_NOT_FOUND));
+
+        participate.setRegistered(true);
+        participateRepository.save(participate);
+    }
+
     // 응답 객체 변환
     private PostResponseDTO.participateDTO convertApplicationPost(Participate p) {
         PostResponseDTO.participateDTO post =

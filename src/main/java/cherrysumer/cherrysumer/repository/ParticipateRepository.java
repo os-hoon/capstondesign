@@ -16,7 +16,8 @@ public interface ParticipateRepository extends JpaRepository<Participate, Long> 
     //@Query("select P.post from Participate p where P.post = :p")
     //List<Post> findAllByPost(@Param("p") Post post);
 
-    Long countAllByPost(Post post);
+    @Query("SELECT count(*) FROM Participate p WHERE p.status != '게시자' AND p.post = :post")
+    Long countAllByPost(@Param("post") Post post);
 
     //@Query("select P.post from Participate p where P.user = :u")
     //List<Post> findAllByUser(@Param("u") User user);

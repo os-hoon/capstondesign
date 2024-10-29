@@ -5,6 +5,7 @@ import cherrysumer.cherrysumer.domain.User;
 import cherrysumer.cherrysumer.web.dto.PostRequestDTO;
 import cherrysumer.cherrysumer.web.dto.PostResponseDTO;
 import cherrysumer.cherrysumer.web.dto.UserRequestDTO;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface ParticipateService {
     void updateParticipate(UserRequestDTO.decideUserDTO request);
 
     void closeRecruit(User user, Post post);
+
+    void registerInventory(Long postId);
 }

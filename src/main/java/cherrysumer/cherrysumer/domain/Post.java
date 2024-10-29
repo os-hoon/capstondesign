@@ -55,6 +55,7 @@ public class Post extends BaseEntity{
     private List<String> detailed_category;
 
     // 동네
+    private String region;
     private String regionCode;
 
     private boolean isClosed; // 마감 여부

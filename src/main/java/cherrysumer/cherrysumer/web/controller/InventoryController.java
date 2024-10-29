@@ -2,6 +2,7 @@ package cherrysumer.cherrysumer.web.controller;
 
 import cherrysumer.cherrysumer.domain.Inventory;
 import cherrysumer.cherrysumer.service.InventoryService;
+import cherrysumer.cherrysumer.service.ParticipateService;
 import cherrysumer.cherrysumer.util.ApiResponse;
 import cherrysumer.cherrysumer.web.dto.InventoryDTO;
 import jakarta.validation.Valid;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class InventoryController {
 
     private final InventoryService inventoryService;
+    private final ParticipateService participateService;
 
 
     // 기존 재고 조회
@@ -90,5 +92,9 @@ public class InventoryController {
     }
 
 
-
+    @GetMapping("/register/{postId}")
+    public ApiResponse<?> registerPostInventory(@PathVariable(name = "postId") Long postId) {
+        participateService.registerInventory(postId);
+        return ApiResponse.onSuccess("재고 등록이 완료되었습니다.");
+    }
 }

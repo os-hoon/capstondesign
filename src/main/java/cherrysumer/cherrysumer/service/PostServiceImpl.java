@@ -57,6 +57,7 @@ public class PostServiceImpl implements PostService{
         post.setPlace(request.getPlace());
         post.setDetailed_category(request.getDetailed_category());
         post.setContent(request.getContent());
+        post.setRegion(user.getRegion());
         post.setRegionCode(user.getRegionCode());
         post.setClosed(false);
         post.setClosed(false);
