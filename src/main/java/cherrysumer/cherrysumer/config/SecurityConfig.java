@@ -27,6 +27,7 @@ public class SecurityConfig {
             "/user/**",
             "/inventory/**",
             "/image/**"// 재고 조회 관련 요청 허용
+            ,"/chat/**"
     };
 
     @Bean

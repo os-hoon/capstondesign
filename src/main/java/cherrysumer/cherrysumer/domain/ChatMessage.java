@@ -13,7 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(value = {AuditingEntityListener.class})
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatMessage {
+public class ChatMessage extends BaseEntity{
 
     @EqualsAndHashCode.Include
     @Id
@@ -21,8 +21,8 @@ public class ChatMessage {
     @Column(name = "id")
     private Long id;
 
-    @JoinColumn(name = "roomId", insertable = false, updatable = false)
-    private String roomId; //단순히 ID 값만 필요  (ChatRoom)
+    @Column(name = "roomId")
+    private String roomId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
