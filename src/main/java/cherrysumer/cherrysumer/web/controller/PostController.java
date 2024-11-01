@@ -2,6 +2,7 @@ package cherrysumer.cherrysumer.web.controller;
 
 
 import cherrysumer.cherrysumer.service.PostService;
+import cherrysumer.cherrysumer.service.SearchLogService;
 import cherrysumer.cherrysumer.util.ApiResponse;
 import cherrysumer.cherrysumer.web.dto.PostRequestDTO;
 import cherrysumer.cherrysumer.web.dto.ProfileDTO;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 public class PostController {
 
     private final PostService postService;
+    private final SearchLogService searchLogService;
 
     // 공구 게시글 조회
     @GetMapping("")
@@ -72,6 +74,7 @@ public class PostController {
                 Arrays.stream(category.split(","))
                         .map(String::trim) // 각 요소의 앞뒤 공백 제거
                         .collect(Collectors.toList());
+        searchLogService.saveRecentSearchLog(q,Boolean.FALSE);
         return ApiResponse.onSuccess(postService.searchPosts(q, categorys, filter));
     }
 

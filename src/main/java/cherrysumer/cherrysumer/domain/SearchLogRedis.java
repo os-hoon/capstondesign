@@ -22,4 +22,6 @@ public class SearchLogRedis {
     private String name;
 
     private LocalDateTime createdAt;
+
+    private Boolean state;
 }

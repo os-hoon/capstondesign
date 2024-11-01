@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class SearchLogServiceImpl implements SearchLogService {
@@ -28,13 +30,14 @@ public class SearchLogServiceImpl implements SearchLogService {
     }
 
     @Override
-    public void saveRecentSearchLog(String name) {
+    public void saveRecentSearchLog(String name, Boolean state) {
         User user = userService.getLoggedInUser();
         String key = searchLogKey(user.getId());
 
         SearchLogRedis value = new SearchLogRedis();
         value.setName(name);
         value.setCreatedAt(LocalDateTime.now());
+        value.setState(state);
 
 
         Long size = redisTemplate.opsForList().size(key);
@@ -55,20 +58,26 @@ public class SearchLogServiceImpl implements SearchLogService {
     }
 
     @Override
-    public void deleteRecentSearchLog(String name, LocalDateTime createdAt) {
+    public void deleteRecentSearchLog(String name, LocalDateTime createdAt, Boolean state) {
         User user = userService.getLoggedInUser();
         String key = searchLogKey(user.getId());
 
         SearchLogRedis value = new SearchLogRedis();
         value.setName(name);
         value.setCreatedAt(createdAt);
+        value.setState(state);
 
         long count = redisTemplate.opsForList().remove(key, 1, value);
 
         if (count == 0) {
             new BaseException(ErrorCode._SEARCH_NOT_FOUND);
         }
-
-        searchLogRedisRepository.delete(value);
+// DB에서 해당 엔티티를 조회 후 삭제
+        Optional<SearchLogRedis> optionalValue = searchLogRedisRepository.findByNameAndCreatedAtAndState(name, createdAt, state);
+        if (optionalValue.isPresent()) {
+            searchLogRedisRepository.delete(optionalValue.get());
+        } else {
+            throw new BaseException(ErrorCode._SEARCH_NOT_FOUND);
+        }
     }
 }

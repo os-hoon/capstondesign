@@ -3,6 +3,7 @@ package cherrysumer.cherrysumer.web.controller;
 import cherrysumer.cherrysumer.domain.Inventory;
 import cherrysumer.cherrysumer.service.InventoryService;
 import cherrysumer.cherrysumer.service.ParticipateService;
+import cherrysumer.cherrysumer.service.SearchLogService;
 import cherrysumer.cherrysumer.util.ApiResponse;
 import cherrysumer.cherrysumer.web.dto.InventoryDTO;
 import jakarta.validation.Valid;
@@ -23,6 +24,7 @@ public class InventoryController {
 
     private final InventoryService inventoryService;
     private final ParticipateService participateService;
+    private final SearchLogService searchLogService;
 
 
     // 기존 재고 조회
@@ -60,6 +62,7 @@ public class InventoryController {
     public ApiResponse<List<Inventory>> searchInventory(@AuthenticationPrincipal User user,@RequestParam String query) {
         Long userId = Long.parseLong(user.getUsername());
         List<Inventory> inventories = inventoryService.searchInventory(query, userId);
+        searchLogService.saveRecentSearchLog(query,Boolean.TRUE);
         return ApiResponse.onSuccess(inventories);
     }
 

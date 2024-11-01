@@ -12,4 +12,5 @@ import java.time.LocalDateTime;
 public class SearchLogRedisDto {
     private String name;
     private LocalDateTime createdAt;
+    private Boolean state;
 }
