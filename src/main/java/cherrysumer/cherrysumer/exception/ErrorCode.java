@@ -47,7 +47,14 @@ public enum ErrorCode {
     _CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "C404", "해당 카테고리를 찾을 수 없습니다."),
     _CATEGORY_DUPLICATE(HttpStatus.CONFLICT, "C409", "해당 재고에 이미 같은 이름의 카테고리가 존재합니다."),
     _CATEGORY_NOT_IN_INVENTORY(HttpStatus.NOT_FOUND, "C408", "해당 재고에 존재하지 않는 카테고리입니다."),
+
+
+
+
+    //search error
+    _SEARCH_NOT_FOUND(HttpStatus.NOT_FOUND,"F404","검색 기록이 존재하지 않습니다.")
     ;
+
 
 
 
