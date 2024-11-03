@@ -4,6 +4,7 @@ import cherrysumer.cherrysumer.exception.ErrorCode;
 import cherrysumer.cherrysumer.exception.handler.CertificationHandler;
 import cherrysumer.cherrysumer.service.MyPageService;
 import cherrysumer.cherrysumer.service.PostService;
+import cherrysumer.cherrysumer.service.UserService;
 import cherrysumer.cherrysumer.util.ApiResponse;
 import cherrysumer.cherrysumer.web.dto.ProfileDTO;
 import cherrysumer.cherrysumer.web.dto.RegionDTO;
@@ -26,6 +27,7 @@ public class MyPageController {
     private final PostService postService;
     private final MyPageService myPageService;
     private final ParticipateService participateService;
+    private final UserService userService;
 
     // 모집, 참여 현황 조회
     @GetMapping("/applications/{filter}")
@@ -90,5 +92,11 @@ public class MyPageController {
     @GetMapping("/posts")
     public ApiResponse<?> postList() {
         return ApiResponse.onSuccess(postService.postList());
+    }
+
+    // 카테고리 변경
+    @PostMapping("/change/category")
+    public ApiResponse<?> changeCategory(@RequestBody UserRequestDTO.categoryDTO request) {
+        return ApiResponse.onSuccess(userService.updateCategory(request));
     }
 }

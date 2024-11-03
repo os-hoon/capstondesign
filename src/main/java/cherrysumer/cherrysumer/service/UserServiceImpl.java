@@ -17,6 +17,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -126,6 +128,15 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO.successLoginDTO loginAuth() {
         User user = getLoggedInUser();
         return new UserResponseDTO.successLoginDTO(user.getRegion(), user.getName());
+    }
+
+    @Override
+    public List<String> updateCategory(UserRequestDTO.categoryDTO request) {
+        User user = getLoggedInUser();
+        user.setCategory(request.getCategory());
+        userRepository.save(user);
+
+        return user.getCategory();
     }
 
     // 비밀번호 변경

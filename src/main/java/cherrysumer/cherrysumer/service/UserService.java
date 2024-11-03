@@ -9,6 +9,7 @@ import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.io.ParseException;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -32,5 +33,7 @@ public interface UserService {
     Point convertPoint(String longitude, String latitude) throws ParseException;
 
     UserResponseDTO.successLoginDTO loginAuth();
+
+    List<String> updateCategory(UserRequestDTO.categoryDTO request);
 
 }

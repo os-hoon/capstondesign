@@ -379,13 +379,6 @@ public class PostServiceImpl implements PostService{
         int likes = likesRepository.countByPost(p).intValue();
         boolean status = likesRepository.existsByPostAndUser(p, u);
 
-        /*if(likesRepository.existsByPostAndUser(p, u)) {
-            status = true;
-            //status = likesRepository.findByPostAndUser(p, u).isStatus();
-        } else {
-            status = false;
-        }*/
-
         String upload = TimeUtil.convertTime(p.getUpdatedAt());
         PostResponseDTO.postDTO post = new PostResponseDTO.postDTO(p, likes, status, upload);
 
@@ -396,13 +389,6 @@ public class PostServiceImpl implements PostService{
         //detailPostDTO(Post p, String upload, int likes, boolean like_status, boolean isAuthor, boolean isJoin)
         int likes = likesRepository.countByPost(p).intValue();
         boolean status = likesRepository.existsByPostAndUser(p, u);
-
-        /*if(likesRepository.existsByPostAndUser(p, u)) {
-            status = true;
-            //status = likesRepository.findByPostAndUser(p, u).isStatus();
-        } else {
-            status = false;
-        }*/
 
         String upload = TimeUtil.convertTime(p.getUpdatedAt());
 

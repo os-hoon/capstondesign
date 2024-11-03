@@ -103,4 +103,11 @@ public class UserRequestDTO {
         String isConfirmed;
     }
 
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class categoryDTO {
+        private List<String> category;
+    }
+
 }
