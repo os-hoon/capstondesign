@@ -340,7 +340,7 @@ public class PostServiceImpl implements PostService{
     public List<PostResponseDTO.postDataDTO> postLikeList() {
         List<Post> posts = getLikePosts();
         List<PostResponseDTO.postDataDTO> list = posts.stream()
-                .map(PostResponseDTO.postDataDTO::new)
+                .map(p -> new PostResponseDTO.postDataDTO(p, p.isClosed()))
                 .collect(Collectors.toList());
         return list;
     }
