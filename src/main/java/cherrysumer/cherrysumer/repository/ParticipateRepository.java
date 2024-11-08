@@ -13,25 +13,19 @@ import java.util.Optional;
 
 public interface ParticipateRepository extends JpaRepository<Participate, Long> {
 
-    //@Query("select P.post from Participate p where P.post = :p")
-    //List<Post> findAllByPost(@Param("p") Post post);
-
     @Query("SELECT count(*) FROM Participate p WHERE p.status != '게시자' AND p.post = :post")
     Long countAllByPost(@Param("post") Post post);
 
-    //@Query("select P.post from Participate p where P.user = :u")
-    //List<Post> findAllByUser(@Param("u") User user);
-
-    @Query("SELECT p FROM Participate p WHERE p.status != '게시자' AND p.user = :user")
+    @Query("SELECT p FROM Participate p JOIN fetch p.post WHERE p.status != '게시자' AND p.user = :user")
     List<Participate> findAllByUser(@Param("user") User user);
 
-    @Query("SELECT p FROM Participate p WHERE p.status != '게시자' AND p.post = :post")
+    @Query("SELECT p FROM Participate p JOIN fetch p.user WHERE p.status != '게시자' AND p.post = :post")
     List<Participate> findAllByPost(@Param("post") Post post);
 
-    @Query("SELECT p FROM Participate p WHERE p.status = '승인' AND p.post = :post")
+    @Query("SELECT p FROM Participate p JOIN fetch p.user WHERE p.status = '승인' AND p.post = :post")
     List<Participate> findAllByPost0(@Param("post") Post post);
 
-    @Query("SELECT p FROM Participate p WHERE p.status = '거절' AND p.post = :post")
+    @Query("SELECT p FROM Participate p JOIN fetch p.user WHERE p.status = '거절' AND p.post = :post")
     List<Participate> findAllByPost1(@Param("post") Post post);
 
     boolean existsByPostAndUser(Post post, User user);
@@ -41,7 +35,7 @@ public interface ParticipateRepository extends JpaRepository<Participate, Long> 
     @Query("SELECT count(p) FROM Participate p WHERE p.status = '승인'")
     Long countParticipateByPost(Post post);
 
-    @Query("SELECT p FROM Participate p WHERE p.post = :post and p.status = '미확인'")
+    @Query("SELECT p FROM Participate p JOIN fetch p.user WHERE p.post = :post and p.status = '미확인'")
     List<Participate> searchByConfirm(@Param("post") Post post);
 
     @Modifying

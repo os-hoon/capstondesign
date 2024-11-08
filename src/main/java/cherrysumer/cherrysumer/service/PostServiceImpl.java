@@ -112,15 +112,14 @@ public class PostServiceImpl implements PostService{
     private List<PostResponseDTO.postDTO> getRegionPosts(List<String> category, String filter) {
         User user = userService.getLoggedInUser();
 
-        List<Post> posts = (category == null) ? postRepository.findAllByRegionCode(user.getRegionCode()) :
-                postRepository.findAllPost(user.getRegionCode(), category);
+        List<Post> posts = postRepository.findAllPost(user.getRegionCode(), category);
+                /*(category == null) ? postRepository.findAllByRegionCode(user.getRegionCode()) :
+                postRepository.findAllPost(user.getRegionCode(), category);*/
 
         posts = filterPost(user, posts, filter);
-        //List<Post> posts = postRepository.findAllByRegionCodeOrderByCreatedAt(user.getRegionCode());
-        //posts.sort((o1, o2) -> (int) (likesRepository.countByPost(o2) - likesRepository.countByPost(o1)));
 
         List<PostResponseDTO.postDTO> list = posts.stream()
-                .map((Post p) -> convertPost(p, user))
+                .map(p -> convertPost(p, user))
                 .collect(Collectors.toList());
 
         return list;

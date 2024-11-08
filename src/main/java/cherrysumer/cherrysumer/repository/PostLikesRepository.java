@@ -16,7 +16,9 @@ public interface PostLikesRepository extends JpaRepository<PostLikes, Long> {
     Boolean existsByPostAndUser(Post post, User user);
     PostLikes findByPostAndUser(Post post, User user);
 
-    List<PostLikes> findAllByUser(User user);
+
+    @Query("SELECT pl FROM PostLikes pl JOIN FETCH pl.post WHERE pl.user = :user")
+    List<PostLikes> findAllByUser(@Param("user") User user);
 
     @Modifying
     @Query("DELETE FROM PostLikes p where p.post = :post")
