@@ -265,10 +265,8 @@ public class PostResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class postDataDTO {
         private Long postId;
-        @JsonInclude(JsonInclude.Include.ALWAYS)
         private String imageUrl;
         private String title;
         private String productname;
@@ -285,19 +283,7 @@ public class PostResponseDTO {
             this.price = (int) Math.round(p.getPrice() / (double) p.getCapacity());
             this.imageUrl = (p.getPostImage() == null || p.getPostImage().isEmpty()) ?
                     null : "/image/view/" + p.getPostImage().get(0).getImagepath();
-        }
-
-        public postDataDTO(Post p, boolean isClosed) {
-            this.postId = p.getId();
-            this.title = p.getTitle();
-            this.productname = p.getProductname();
-            this.region = p.getRegion();
-            this.price = (int) Math.round(p.getPrice() / (double) p.getCapacity());
-            this.imageUrl = (p.getPostImage() == null || p.getPostImage().isEmpty()) ?
-                    null : "/image/view/" + p.getPostImage().get(0).getImagepath();
-
-            this.closed = isClosed;
-
+            this.closed = p.isClosed();
         }
     }
 }
