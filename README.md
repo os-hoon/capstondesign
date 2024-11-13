@@ -1,5 +1,7 @@
-![image](https://github.com/user-attachments/assets/5b7784b1-be64-4af1-9d32-85fac3473267)
->공동구매 및 재고관리 서비스를 제공하는 애플리케이션
+![image](https://github.com/user-attachments/assets/1e4df942-c56c-4197-ab9f-f2d77893b4c6)
+
+
+>cherrysumer는 공동구매 및 재고관리 서비스를 제공하는 애플리케이션
 
 🤷소개
 ------------
