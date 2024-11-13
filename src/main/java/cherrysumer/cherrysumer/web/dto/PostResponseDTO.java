@@ -115,7 +115,9 @@ public class PostResponseDTO {
         private String title;
         private String productname;
         private LocalDate date;
-        private List<String> category;
+        @JsonInclude(JsonInclude.Include.ALWAYS)
+        private String category;
+        //private List<String> category;
 
         private boolean isPurchaseCompleted; // 구매 완료 여부
         private boolean isInventoryRegistered; // 재고 등록 여부
@@ -128,8 +130,9 @@ public class PostResponseDTO {
             this.productname = p.getProductname();
             this.date = p.getDate().toLocalDate();
             this.category = p.getCategory().stream()
-                    .filter((String c) -> !c.equals("배달"))
-                    .collect(Collectors.toList());
+                    .filter(c -> !c.equals("배달"))
+                    .findFirst() // 첫 번째 요소를 Optional로 가져옵니다.
+                    .orElse(null); // 값이 없으면 null을 반환합니다.
 
             this.isInventoryRegistered = isRegister;
             this.participationStatus = isConfirmed;
@@ -147,8 +150,9 @@ public class PostResponseDTO {
             this.applicantCount = number;
             this.date = p.getDate().toLocalDate();
             this.category = p.getCategory().stream()
-                    .filter((String c) -> !c.equals("배달"))
-                    .collect(Collectors.toList());
+                    .filter(c -> !c.equals("배달"))
+                    .findFirst() // 첫 번째 요소를 Optional로 가져옵니다.
+                    .orElse(null); // 값이 없으면 null을 반환합니다.
 
             this.isInventoryRegistered = isRegister;
             this.isPurchaseCompleted = (p.getDate().isBefore(LocalDateTime.now())) ? true : false;
