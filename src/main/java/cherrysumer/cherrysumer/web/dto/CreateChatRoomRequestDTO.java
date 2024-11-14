@@ -6,4 +6,5 @@ import lombok.Getter;
 public class CreateChatRoomRequestDTO {
     private Long roomMakerId;
     private Long guestId;
+    private Long postId; // 추가된 필드
 }

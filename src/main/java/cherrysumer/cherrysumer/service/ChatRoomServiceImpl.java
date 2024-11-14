@@ -1,10 +1,12 @@
 package cherrysumer.cherrysumer.service;
 
 import cherrysumer.cherrysumer.domain.ChatRoom;
+import cherrysumer.cherrysumer.domain.Post;
 import cherrysumer.cherrysumer.domain.User;
 import cherrysumer.cherrysumer.exception.BaseException;
 import cherrysumer.cherrysumer.exception.ErrorCode;
 import cherrysumer.cherrysumer.repository.ChatRoomRepository;
+import cherrysumer.cherrysumer.repository.PostRepository;
 import cherrysumer.cherrysumer.repository.UserRepository;
 import cherrysumer.cherrysumer.web.dto.CreateChatRoomRequestDTO;
 import cherrysumer.cherrysumer.web.dto.CreateChatRoomResponseDTO;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class ChatRoomServiceImpl implements ChatRoomService {
 
     private final UserRepository userRepository;
+    private final PostRepository postRepository; // 추가된 PostRepository
     private final ChatRoomRepository chatRoomRepository;
     private final UserService userService;
 
@@ -27,11 +30,14 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         User guest = userRepository.findById(chatRoomRequest.getGuestId())
                 .orElseThrow(() -> new BaseException(ErrorCode._USER_NOT_FOUND));
 
+        Post post = postRepository.findById(chatRoomRequest.getPostId())
+                .orElseThrow(() -> new BaseException(ErrorCode._POST_NOT_FOUND)); // Post 검증 추가
+
         ChatRoom newRoom  = ChatRoom.create();
-        newRoom.addMembers(roomMaker, guest);
+        newRoom.addMembersAndPost(roomMaker, guest, post);
 
         chatRoomRepository.save(newRoom);
 
-        return new CreateChatRoomResponseDTO(roomMaker.getId(),guest.getId(), newRoom.getId());
+        return new CreateChatRoomResponseDTO(roomMaker.getId(),guest.getId(), newRoom.getId(),post.getId());
     }
 }

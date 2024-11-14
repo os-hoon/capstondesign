@@ -32,10 +32,18 @@ public class ChatRoom extends BaseEntity{
     private ChatMessage lastChatMesg;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "ChatRoom_Members",
+    @JoinTable(name = "ChatRoom_Users",
             joinColumns = @JoinColumn(name = "chatRoomId"),
             inverseJoinColumns = @JoinColumn(name = "userId"))
     private Set<User> chatRoomMembers = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "ChatRoom_Posts",
+            joinColumns = @JoinColumn(name = "chatRoomId"),
+            inverseJoinColumns = @JoinColumn(name = "postId")
+    )
+    private Set<Post> associatedPosts = new HashSet<>();
 
 
     public static ChatRoom create() {
@@ -46,8 +54,9 @@ public class ChatRoom extends BaseEntity{
         return room;
     }
 
-    public void addMembers(User roomMaker, User guest) {
+    public void addMembersAndPost(User roomMaker, User guest, Post post) {
         this.chatRoomMembers.add(roomMaker);
         this.chatRoomMembers.add(guest);
+        this.associatedPosts.add(post);
     }
 }
