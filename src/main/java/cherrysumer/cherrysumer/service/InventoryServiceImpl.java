@@ -109,20 +109,21 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public List<Inventory> findInventoryByUserId(Long userId) {
-        return inventoryRepository.findAllByUserId(userId);
+    public List<Inventory> findInventoryByUserId() {
+        User user = userService.getLoggedInUser();
+        return inventoryRepository.findAllByUserId(user.getId());
     }
 
     @Override
-    public List<Inventory> findInventoryByStockLocationAndUserId(String stockLocation, Long userId) {
-        return inventoryRepository.findByStockLocationAndUserId(stockLocation, userId);
+    public List<Inventory> findInventoryByStockLocationAndUserId(String stockLocation) {
+        User user = userService.getLoggedInUser();
+        return inventoryRepository.findByStockLocationAndUserId(stockLocation, user.getId());
     }
 
     @Override
-    public void insertInventory(Long userId, InventoryDTO inventoryDTO) {
+    public void insertInventory(InventoryDTO inventoryDTO) {
         // 사용자 찾기
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(ErrorCode._USER_NOT_FOUND));
+        User user = userService.getLoggedInUser();
 
         // 새로운 재고 생성
         Inventory inventory = new Inventory();
@@ -164,8 +165,9 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public List<Inventory> searchInventory(String query, Long id) {
-        return inventoryRepository.findByProductNameContainingAndUserId(query, id);
+    public List<Inventory> searchInventory(String query) {
+        User user = userService.getLoggedInUser();
+        return inventoryRepository.findByProductNameContainingAndUserId(query, user.getId());
     }
 
 

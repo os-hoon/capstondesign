@@ -28,17 +28,15 @@ public class InventoryController {
 
     // 기존 재고 조회
     @GetMapping("/check")
-    public ApiResponse<List<Inventory>> getInventory(@AuthenticationPrincipal User user) {
-        Long userId = Long.parseLong(user.getUsername());  // 현재 로그인한 사용자의 ID를 가져옴
-        List<Inventory> inventories = inventoryService.findInventoryByUserId(userId);
+    public ApiResponse<List<Inventory>> getInventory() {
+        List<Inventory> inventories = inventoryService.findInventoryByUserId();
         return ApiResponse.onSuccess(inventories);
     }
 
     // 재고 추가
     @PostMapping("/insert")
-    public ApiResponse<?> insertInventory(@AuthenticationPrincipal User user, @RequestBody @Valid InventoryDTO inventoryDTO) {
-        Long userId = Long.parseLong(user.getUsername());
-        inventoryService.insertInventory(userId, inventoryDTO);
+    public ApiResponse<?> insertInventory(@RequestBody @Valid InventoryDTO inventoryDTO) {
+        inventoryService.insertInventory(inventoryDTO);
         return ApiResponse.onSuccess("재고가 성공적으로 추가되었습니다.");
     }
 
@@ -58,17 +56,15 @@ public class InventoryController {
 
     // 재고 검색
     @GetMapping("/search")
-    public ApiResponse<List<Inventory>> searchInventory(@AuthenticationPrincipal User user,@RequestParam String query) {
-        Long userId = Long.parseLong(user.getUsername());
-        List<Inventory> inventories = inventoryService.searchInventory(query, userId);
+    public ApiResponse<List<Inventory>> searchInventory(@RequestParam String query) {
+        List<Inventory> inventories = inventoryService.searchInventory(query);
         searchLogService.saveRecentSearchLog(query,Boolean.TRUE);
         return ApiResponse.onSuccess(inventories);
     }
 
     @GetMapping("/location/{stockLocation}")
-    public ApiResponse<List<Inventory>> getInventoryByLocation(@AuthenticationPrincipal User user, @PathVariable String stockLocation) {
-        Long userId = Long.parseLong(user.getUsername());
-        List<Inventory> inventories = inventoryService.findInventoryByStockLocationAndUserId(stockLocation, userId);
+    public ApiResponse<List<Inventory>> getInventoryByLocation(@PathVariable String stockLocation) {
+        List<Inventory> inventories = inventoryService.findInventoryByStockLocationAndUserId(stockLocation);
         return ApiResponse.onSuccess(inventories);
     }
 
