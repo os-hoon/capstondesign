@@ -31,19 +31,9 @@ public class ChatRoom extends BaseEntity{
     @JoinColumn(name = "lastChatMesgId")
     private ChatMessage lastChatMesg;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "ChatRoom_Users",
-            joinColumns = @JoinColumn(name = "chatRoomId"),
-            inverseJoinColumns = @JoinColumn(name = "userId"))
-    private Set<User> chatRoomMembers = new HashSet<>();
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<ChatRoomMember> chatRoomMembers = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "ChatRoom_Posts",
-            joinColumns = @JoinColumn(name = "chatRoomId"),
-            inverseJoinColumns = @JoinColumn(name = "postId")
-    )
-    private Set<Post> associatedPosts = new HashSet<>();
 
 
     public static ChatRoom create() {
@@ -54,9 +44,12 @@ public class ChatRoom extends BaseEntity{
         return room;
     }
 
-    public void addMembersAndPost(User roomMaker, User guest, Post post) {
-        this.chatRoomMembers.add(roomMaker);
-        this.chatRoomMembers.add(guest);
-        this.associatedPosts.add(post);
+    public void addMember(User user, Post post) {
+        ChatRoomMember member = ChatRoomMember.builder()
+                .chatRoom(this)
+                .user(user)
+                .post(post)
+                .build();
+        this.chatRoomMembers.add(member);
     }
 }

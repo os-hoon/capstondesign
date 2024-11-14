@@ -34,7 +34,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                 .orElseThrow(() -> new BaseException(ErrorCode._POST_NOT_FOUND)); // Post 검증 추가
 
         ChatRoom newRoom  = ChatRoom.create();
-        newRoom.addMembersAndPost(roomMaker, guest, post);
+        newRoom.addMember(roomMaker, post); // 방 생성자와 포스트 추가
+        newRoom.addMember(guest, post);    // 게스트와 포스트 추가
 
         chatRoomRepository.save(newRoom);
 
