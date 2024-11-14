@@ -18,7 +18,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
         // socketJs 클라이언트가 WebSocket 핸드셰이크를 하기 위해 연결할 endpoint를 지정할 수 있다.
         registry.addEndpoint("/chat/inbox")
-                .setAllowedOriginPatterns("*"); // cors 허용을 위해 꼭 설정해주어야 한다.
+                .setAllowedOriginPatterns("*") // cors 허용을 위해 꼭 설정해주어야 한다.
+                .withSockJS();
     }
 
     @Override
