@@ -24,10 +24,9 @@ public class ChatMessage extends BaseEntity{
     @Column(name = "roomId")
     private String roomId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore  // 이 줄을 추가하여 User 정보가 JSON에 포함되지 않도록 설정
-    private User user;
+    private Long user;
 
     @Column(name = "message")
     private String message;

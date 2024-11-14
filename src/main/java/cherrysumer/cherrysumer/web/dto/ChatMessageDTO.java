@@ -15,11 +15,13 @@ public class ChatMessageDTO {
     private String roomId;
     private String message;
 
+
     /* Dto -> Entity */
-    public ChatMessage toEntity() {
+    public ChatMessage toEntity(Long userId) {
         ChatMessage chatMessage = ChatMessage.builder()
                 .roomId(roomId)
                 .message(message)
+                .user(userId)
                 .build();
         return chatMessage;
     }

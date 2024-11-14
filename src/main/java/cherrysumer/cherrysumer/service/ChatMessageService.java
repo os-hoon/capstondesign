@@ -4,5 +4,5 @@ import cherrysumer.cherrysumer.domain.ChatMessage;
 import cherrysumer.cherrysumer.web.dto.ChatMessageDTO;
 
 public interface ChatMessageService {
-    ChatMessage createChatMessage(ChatMessageDTO chatMessageDto);
+    ChatMessage createChatMessage(ChatMessageDTO chatMessageDto, Long userId);
 }

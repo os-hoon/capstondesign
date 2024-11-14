@@ -8,7 +8,6 @@ import cherrysumer.cherrysumer.util.ApiResponse;
 import cherrysumer.cherrysumer.web.dto.InventoryDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;

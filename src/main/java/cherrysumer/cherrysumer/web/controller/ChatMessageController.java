@@ -6,7 +6,10 @@ import cherrysumer.cherrysumer.web.dto.ChatMessageDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -17,8 +20,10 @@ public class ChatMessageController {
     private final SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/message")
-    public void sendMessage(ChatMessageDTO message) {
-        ChatMessage newChat = chatMessageService.createChatMessage(message);
+    public void sendMessage(ChatMessageDTO message, SimpMessageHeaderAccessor accessor) {
+        String userId = (String) accessor.getSessionAttributes().get("userId");
+        Long userIdAsLong = Long.parseLong(userId);
+        ChatMessage newChat = chatMessageService.createChatMessage(message,userIdAsLong);
         log.info("received message: {}", message);
         messagingTemplate.convertAndSend("/sub/channel/" + message.getRoomId(), newChat);
     }
