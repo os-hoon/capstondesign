@@ -217,6 +217,7 @@ public class PostResponseDTO {
          */
         private Long postId;
         private String writer;
+        private Long writerId;
         private List<String> imagefiles;
         private List<String> detail_category;
         private List<String> category;
@@ -240,6 +241,7 @@ public class PostResponseDTO {
         public detailPostDTO(Post p, String upload, int likes, boolean like_status, boolean isAuthor, boolean isJoin) {
             this.postId = p.getId();
             this.writer = p.getUser().getNickname();
+            this.writerId = p.getUser().getId();
             this.detail_category = p.getDetailed_category();
             this.category = p.getCategory();
             this.title = p.getTitle();
