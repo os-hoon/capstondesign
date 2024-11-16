@@ -84,7 +84,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                     if ("전체".equals(status)) {
                         return true; // 모든 데이터를 반환
                     } else if ("참여".equals(status)) {
-                        return "승인".equals(dto.getStatus()) || "거절".equals(dto.getStatus());
+                        return "승인".equals(dto.getStatus()) || "거절".equals(dto.getStatus()) || "미확인".equals(dto.getStatus());
                     } else if ("모집".equals(status)) {
                         return "게시자".equals(dto.getStatus());
                     }
