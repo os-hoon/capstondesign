@@ -20,7 +20,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class ChatRoom extends BaseEntity{
+public class ChatRoom{
     @EqualsAndHashCode.Include
     @Id
     @Column(name = "id")

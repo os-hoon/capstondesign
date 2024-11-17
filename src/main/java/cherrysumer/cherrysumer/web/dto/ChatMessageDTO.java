@@ -4,6 +4,7 @@ import cherrysumer.cherrysumer.domain.ChatMessage;
 import cherrysumer.cherrysumer.domain.User;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -21,6 +22,7 @@ public class ChatMessageDTO {
                 .roomId(roomId)
                 .message(message)
                 .user(userId)
+                .createdAt(LocalDateTime.now())
                 .build();
         return chatMessage;
     }

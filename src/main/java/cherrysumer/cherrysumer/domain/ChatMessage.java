@@ -1,9 +1,11 @@
 package cherrysumer.cherrysumer.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -13,7 +15,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(value = {AuditingEntityListener.class})
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatMessage extends BaseEntity{
+public class ChatMessage{
 
     @EqualsAndHashCode.Include
     @Id
@@ -29,5 +31,8 @@ public class ChatMessage extends BaseEntity{
 
     @Column(name = "message")
     private String message;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
 
 }
