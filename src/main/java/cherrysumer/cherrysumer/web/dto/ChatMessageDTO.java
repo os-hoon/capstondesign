@@ -2,10 +2,9 @@ package cherrysumer.cherrysumer.web.dto;
 
 import cherrysumer.cherrysumer.domain.ChatMessage;
 import cherrysumer.cherrysumer.domain.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -24,5 +23,27 @@ public class ChatMessageDTO {
                 .user(userId)
                 .build();
         return chatMessage;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class chatMessageListDTO {
+        private Long myId; // 내 userId
+        private Long partnerId; // 상대방 userId
+        private String roomId; // 채팅방 Id
+        private PostResponseDTO.summaryPostDTO post;
+        private List<chatMessageDTO> chatList; // 이전 대화 내용
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class chatMessageDTO {
+        private Long id; //메세지 id
+        private Long senderId; // 송신자 userId
+        private String date; // 보낸 날짜
+        private String time; // 보낸 시간
+        private String message; // 보낸 메세지
     }
 }

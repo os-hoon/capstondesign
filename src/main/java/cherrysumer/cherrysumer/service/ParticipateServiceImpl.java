@@ -115,7 +115,7 @@ public class ParticipateServiceImpl implements ParticipateService{
         participateRepository.save(participate);
         // 모집 정원이 다 찬 경우
         if(participateRepository.countParticipateByPost(post) == post.getCapacity()) {
-            closeRecruit(user, post); // 모집 마감
+            closeRecruit(post); // 모집 마감
             post.setClosed(true);
             postRepository.save(post);
         }
@@ -123,7 +123,7 @@ public class ParticipateServiceImpl implements ParticipateService{
 
     // 모집 마감 -> 신청 사용자 모두 거절
     @Override
-    public void closeRecruit(User user, Post post) {
+    public void closeRecruit(Post post) {
         for(Participate p : participateRepository.searchByConfirm(post)) {
             p.setStatus("거절");
             participateRepository.save(p);

@@ -17,7 +17,7 @@ public interface ParticipateService {
 
     void updateParticipate(UserRequestDTO.decideUserDTO request);
 
-    void closeRecruit(User user, Post post);
+    void closeRecruit(Post post);
 
     void registerInventory(Long postId);
 }

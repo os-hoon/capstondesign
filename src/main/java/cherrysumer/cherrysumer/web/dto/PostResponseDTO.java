@@ -279,7 +279,7 @@ public class PostResponseDTO {
         private String region;
         private int price;
 
-        private Boolean closed; // 마감 여부
+        private boolean isClosed; // 마감 여부
 
         public postDataDTO(Post p) {
             this.postId = p.getId();
@@ -289,7 +289,7 @@ public class PostResponseDTO {
             this.price = (int) Math.round(p.getPrice() / (double) p.getCapacity());
             this.imageUrl = (p.getPostImage() == null || p.getPostImage().isEmpty()) ?
                     null : "/image/view/" + p.getPostImage().get(0).getImagepath();
-            this.closed = p.isClosed();
+            this.isClosed = p.isClosed();
         }
     }
 }

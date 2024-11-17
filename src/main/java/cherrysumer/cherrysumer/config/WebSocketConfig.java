@@ -29,7 +29,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
         // 클라이언트로부터 메시지를 받을 api의 prefix를 설정한다.
         // publish
-        registry.setApplicationDestinationPrefixes("/pub");
+        registry.setApplicationDestinationPrefixes("/pub", "/sub");
 
 
     }

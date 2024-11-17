@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -130,7 +131,7 @@ public class PostServiceImpl implements PostService{
 
         switch (filter) {
             case "최신순":
-                posts.sort(Comparator.comparing(Post::getUpdatedAt).reversed());
+                posts.sort(Comparator.comparing(Post::getCreatedAt).reversed());
                 break;
             case "추천순":
                 posts = posts.stream()
@@ -296,7 +297,7 @@ public class PostServiceImpl implements PostService{
             throw new PostErrorHandler(ErrorCode._POST_FORBIDDEN);
 
         // 해당 공구 신청자 -> 모두 거절
-        participateService.closeRecruit(user, post);
+        participateService.closeRecruit(post);
         post.setClosed(true);
         return postRepository.save(post);
 
@@ -319,7 +320,7 @@ public class PostServiceImpl implements PostService{
         User user = userService.getLoggedInUser();
         List<Post> posts = getRecruitPosts(user);
         List<PostResponseDTO.postDataDTO> list = posts.stream()
-                .map(PostResponseDTO.postDataDTO::new)
+                .map(p -> convertPostDataDTO(p))
                 .collect(Collectors.toList());
         return list;
     }
@@ -339,7 +340,7 @@ public class PostServiceImpl implements PostService{
     public List<PostResponseDTO.postDataDTO> postLikeList() {
         List<Post> posts = getLikePosts();
         List<PostResponseDTO.postDataDTO> list = posts.stream()
-                .map(PostResponseDTO.postDataDTO::new)
+                .map(p -> convertPostDataDTO(p))
                 .collect(Collectors.toList());
         return list;
     }
@@ -378,7 +379,13 @@ public class PostServiceImpl implements PostService{
         int likes = likesRepository.countByPost(p).intValue();
         boolean status = likesRepository.existsByPostAndUser(p, u);
 
-        String upload = TimeUtil.convertTime(p.getUpdatedAt());
+        if(!p.isClosed() && (p.getDate().isBefore(LocalDateTime.now()))) {
+            participateService.closeRecruit(p);
+            p.setClosed(true);
+            postRepository.save(p);
+        }
+
+        String upload = TimeUtil.convertTime(p.getCreatedAt());
         PostResponseDTO.postDTO post = new PostResponseDTO.postDTO(p, likes, status, upload);
 
         return post;
@@ -389,10 +396,16 @@ public class PostServiceImpl implements PostService{
         int likes = likesRepository.countByPost(p).intValue();
         boolean status = likesRepository.existsByPostAndUser(p, u);
 
-        String upload = TimeUtil.convertTime(p.getUpdatedAt());
+        String upload = TimeUtil.convertTime(p.getCreatedAt());
 
         boolean isAuthor = p.getUser().equals(u);
         boolean isJoin = participateRepository.existsByPostAndUser(p, u);
+
+        if(!p.isClosed() && (p.getDate().isBefore(LocalDateTime.now()))) {
+            participateService.closeRecruit(p);
+            p.setClosed(true);
+            postRepository.save(p);
+        }
 
         return new PostResponseDTO.detailPostDTO(p, upload, likes, status, isAuthor, isJoin);
     }
@@ -404,5 +417,14 @@ public class PostServiceImpl implements PostService{
                 .orElseThrow(() -> new BaseException(ErrorCode._PARTICIPATE_NOT_FOUND));
         PostResponseDTO.participateDTO post = new PostResponseDTO.participateDTO(p, number, participate.isRegistered());
         return post;
+    }
+
+    private PostResponseDTO.postDataDTO convertPostDataDTO(Post p) {
+        if(!p.isClosed() && (p.getDate().isBefore(LocalDateTime.now()))) {
+            participateService.closeRecruit(p);
+            p.setClosed(true);
+            postRepository.save(p);
+        }
+        return new PostResponseDTO.postDataDTO(p);
     }
 }
