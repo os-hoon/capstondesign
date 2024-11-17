@@ -25,7 +25,6 @@ public class ChatMessage extends BaseEntity{
     private String roomId;
 
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore  // 이 줄을 추가하여 User 정보가 JSON에 포함되지 않도록 설정
     private Long user;
 
     @Column(name = "message")
