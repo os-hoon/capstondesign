@@ -359,15 +359,15 @@ public class PostServiceImpl implements PostService{
     public List<PostResponseDTO.postDTO> searchPosts(String q, List<String> category, String filter) {
         User user = userService.getLoggedInUser();
 
-        //List<Post> sortPost = (category == null) ? postRepository.findAllByRegionCode(user.getRegionCode()) :
-                //postRepository.findAllPost(user.getRegionCode(), category);
+        List<Post> categoryPosts = postRepository.findAllPost(user.getRegionCode(), category);
 
         Set<Post> set = new HashSet<>();
         set.addAll(postRepository.searchByKeyword(q));
         set.addAll(postRepository.searchByKeywordNative(q));
-        //set.addAll(sortPost);
 
-        List<Post> posts = filterPost(user, new ArrayList<>(set), filter);
+        categoryPosts.retainAll(set);
+
+        List<Post> posts = filterPost(user, categoryPosts, filter);
 
         return posts.stream()
                 .map((Post p) -> convertPost(p, user))
