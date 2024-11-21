@@ -34,4 +34,6 @@ public interface PostService {
 
     List<PostResponseDTO.postDTO> searchPosts(String q, List<String> category, String filter);
 
+    List<String> recommendKeyword();
+
 }

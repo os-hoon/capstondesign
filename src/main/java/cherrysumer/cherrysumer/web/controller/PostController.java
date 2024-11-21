@@ -96,4 +96,10 @@ public class PostController {
         return ApiResponse.onSuccess(postService.closePost(postId));
     }
 
+    // 게시글 추천 단어
+    @GetMapping("/recommend")
+    public ApiResponse<?> recommendWord() {
+        return ApiResponse.onSuccess(postService.recommendKeyword());
+    }
+
 }

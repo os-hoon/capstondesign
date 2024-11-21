@@ -113,7 +113,11 @@ public class PostServiceImpl implements PostService{
     private List<PostResponseDTO.postDTO> getRegionPosts(List<String> category, String filter) {
         User user = userService.getLoggedInUser();
 
-        List<Post> posts = postRepository.findAllPost(user.getRegionCode(), category);
+        List<Post> allposts = postRepository.findAllByRegionCode(user.getRegionCode());
+        List<Post> posts = allposts.stream()
+                .filter(post -> post.getCategory() == null ||
+                        post.getCategory().stream().anyMatch(cat -> category.contains(cat)))
+                .collect(Collectors.toList());
                 /*(category == null) ? postRepository.findAllByRegionCode(user.getRegionCode()) :
                 postRepository.findAllPost(user.getRegionCode(), category);*/
 
@@ -135,8 +139,8 @@ public class PostServiceImpl implements PostService{
                 break;
             case "추천순":
                 posts = posts.stream()
-                        .sorted(Comparator.comparingInt(p -> p.getCategory().stream()
-                                .anyMatch(userCate::contains) ? 0 : 1))
+                        .filter(p -> p.getCategory().stream()
+                                .anyMatch(userCate::contains)) // userCate에 포함된 값만 필터링
                         .collect(Collectors.toList());
                 break;
             case "인기순":
@@ -359,7 +363,11 @@ public class PostServiceImpl implements PostService{
     public List<PostResponseDTO.postDTO> searchPosts(String q, List<String> category, String filter) {
         User user = userService.getLoggedInUser();
 
-        List<Post> categoryPosts = postRepository.findAllPost(user.getRegionCode(), category);
+        List<Post> allposts = postRepository.findAllByRegionCode(user.getRegionCode());
+        List<Post> categoryPosts = allposts.stream()
+                .filter(post -> post.getCategory() == null ||
+                        post.getCategory().stream().anyMatch(cat -> category.contains(cat)))
+                .collect(Collectors.toList());
 
         Set<Post> set = new HashSet<>();
         set.addAll(postRepository.searchByKeyword(q));
@@ -372,6 +380,14 @@ public class PostServiceImpl implements PostService{
         return posts.stream()
                 .map((Post p) -> convertPost(p, user))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> recommendKeyword() {
+        User user = userService.getLoggedInUser();
+        System.out.println(user.getCategory().toString());
+        List<Post> posts = filterPost(user, postRepository.findAllByRegionCode(user.getRegionCode()), "추천순");
+        return posts.stream().map(p -> p.getProductname()).collect(Collectors.toList());
     }
 
     // post 응답 객체 변환
