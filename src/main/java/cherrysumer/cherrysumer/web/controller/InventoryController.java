@@ -95,4 +95,11 @@ public class InventoryController {
         participateService.registerInventory(postId);
         return ApiResponse.onSuccess("재고 등록이 완료되었습니다.");
     }
+
+    @GetMapping("/filtered-items")
+    public ApiResponse<List<String>> getFilteredItems() {
+        List<String> productNames = inventoryService.getFilteredProductNames();
+        return ApiResponse.onSuccess(productNames);
+    }
+
 }

@@ -11,9 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -168,6 +170,22 @@ public class InventoryServiceImpl implements InventoryService {
     public List<Inventory> searchInventory(String query) {
         User user = userService.getLoggedInUser();
         return inventoryRepository.findByProductNameContainingAndUserId(query, user.getId());
+    }
+
+    @Override
+    public List<String> getFilteredProductNames() {
+        User user = userService.getLoggedInUser(); // 현재 로그인한 사용자
+        LocalDateTime threeDaysLater = LocalDateTime.now().plusDays(3);
+
+        // 생활용품 카테고리의 수량이 2개 이하인 품목
+        List<String> lowQuantityItems = inventoryRepository.findLowQuantityItems(user.getId());
+
+        // 생활용품이 아닌 카테고리의 유통기한이 3일 이하로 남은 품목
+        List<String> nearExpirationItems = inventoryRepository.findNearExpirationItems(user.getId(), threeDaysLater);
+
+        // 두 리스트 합치기
+        return Stream.concat(lowQuantityItems.stream(), nearExpirationItems.stream())
+                .collect(Collectors.toList());
     }
 
 
