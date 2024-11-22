@@ -101,7 +101,7 @@ public class PostServiceImpl implements PostService{
 
     // 게시글 조회
     @Override
-    public List<PostResponseDTO.postDTO> findRegionPosts(List<String> category, String filter) {
+    public PostResponseDTO.postListDTO findRegionPosts(List<String> category, String filter) {
         return getRegionPosts(category, filter);
     }
 
@@ -110,7 +110,7 @@ public class PostServiceImpl implements PostService{
      * @param filter: 최신순, 추천순, 인기순, 저가순, 고가순
      * @return
      */
-    private List<PostResponseDTO.postDTO> getRegionPosts(List<String> category, String filter) {
+    private PostResponseDTO.postListDTO getRegionPosts(List<String> category, String filter) {
         User user = userService.getLoggedInUser();
 
         List<Post> allposts = postRepository.findAllByRegionCode(user.getRegionCode());
@@ -130,7 +130,7 @@ public class PostServiceImpl implements PostService{
                 .map(p -> convertPost(p, user))
                 .collect(Collectors.toList());
 
-        return list;
+        return new PostResponseDTO.postListDTO(user.getRegion(), user.getNickname(), list);
     }
 
     private List<Post> filterPost(User user, List<Post> posts, String filter) {

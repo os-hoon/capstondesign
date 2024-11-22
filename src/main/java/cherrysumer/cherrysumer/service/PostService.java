@@ -12,7 +12,7 @@ public interface PostService {
 
     PostResponseDTO.summaryPostDTO savePost(PostRequestDTO.postDTO request, List<MultipartFile> imagefile) throws ParseException, IOException;
 
-    List<PostResponseDTO.postDTO> findRegionPosts(List<String> category, String filter);
+    PostResponseDTO.postListDTO findRegionPosts(List<String> category, String filter);
 
     void deletePost(Long postId);
 

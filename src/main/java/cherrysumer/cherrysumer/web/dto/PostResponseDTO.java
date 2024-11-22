@@ -19,6 +19,15 @@ public class PostResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class postListDTO {
+        private String region;
+        private String name;
+        private List<postDTO> posts;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class postDTO {
         private Long postId;
         private String imageUrl;
