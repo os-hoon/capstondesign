@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface MyPageService {
 
-    ProfileDTO getProfile();
+    ProfileDTO.Extended getProfile();
 
     ProfileDTO modifyProfile(ProfileDTO profileDTO,MultipartFile file);
 

@@ -23,4 +23,16 @@ public class ProfileDTO {
     private String region;
 
     private String profileImageUrl;
+    // 내부 클래스 (로그인 아이디 포함)
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Extended {
+        private String name;
+        private String nickname;
+        private String email;
+        private String region;
+        private String profileImageUrl;
+        private String loginId; // 로그인 아이디 추가
+    }
 }

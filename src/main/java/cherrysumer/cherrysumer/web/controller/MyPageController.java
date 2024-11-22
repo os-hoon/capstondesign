@@ -43,8 +43,8 @@ public class MyPageController {
 
     // 프로필 조회
     @GetMapping("/profile")
-    public ApiResponse<ProfileDTO> getProfile() {
-        ProfileDTO profile = myPageService.getProfile();
+    public ApiResponse<ProfileDTO.Extended> getProfile() {
+        ProfileDTO.Extended profile = myPageService.getProfile();
         return ApiResponse.onSuccess(profile);
     }
 

@@ -24,7 +24,7 @@ public class MyPageServiceImpl implements MyPageService {
     private final ImageUploadService imageUploadService;
 
     @Override
-    public ProfileDTO getProfile() {
+    public ProfileDTO.Extended getProfile() {
         // 사용자 찾기
         User user = userService.getLoggedInUser();
 
@@ -32,7 +32,7 @@ public class MyPageServiceImpl implements MyPageService {
         String imageUrl = user.getProfileImageUrl() != null ? "/image/view/" + user.getProfileImageUrl() : null;
 
         // 프로필 정보 반환
-        return new ProfileDTO(user.getName(), user.getNickname(), user.getEmail(), user.getRegion(),imageUrl);
+        return new ProfileDTO.Extended(user.getName(), user.getNickname(), user.getEmail(), user.getRegion(),imageUrl, user.getLoginId());
     }
 
     //수정하기 들어가서 아무것도 입력안하면 원래이름 닉네임 이메일 그대로 할거면 예외코드는 따로 설정 안할 예정
