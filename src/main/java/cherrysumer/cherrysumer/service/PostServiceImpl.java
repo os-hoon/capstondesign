@@ -114,10 +114,13 @@ public class PostServiceImpl implements PostService{
         User user = userService.getLoggedInUser();
 
         List<Post> allposts = postRepository.findAllByRegionCode(user.getRegionCode());
-        List<Post> posts = allposts.stream()
-                .filter(post -> post.getCategory() == null ||
-                        post.getCategory().stream().anyMatch(cat -> category.contains(cat)))
-                .collect(Collectors.toList());
+        List<Post> posts = allposts;
+        if(category != null ) {
+            posts = allposts.stream()
+                    .filter(post -> post.getCategory() != null &&
+                            post.getCategory().stream().anyMatch(cat -> category.contains(cat)))
+                    .collect(Collectors.toList());
+        }
                 /*(category == null) ? postRepository.findAllByRegionCode(user.getRegionCode()) :
                 postRepository.findAllPost(user.getRegionCode(), category);*/
 
@@ -364,10 +367,13 @@ public class PostServiceImpl implements PostService{
         User user = userService.getLoggedInUser();
 
         List<Post> allposts = postRepository.findAllByRegionCode(user.getRegionCode());
-        List<Post> categoryPosts = allposts.stream()
-                .filter(post -> post.getCategory() == null ||
-                        post.getCategory().stream().anyMatch(cat -> category.contains(cat)))
-                .collect(Collectors.toList());
+        List<Post> categoryPosts = allposts;
+        if(category != null ) {
+            categoryPosts = allposts.stream()
+                    .filter(post -> post.getCategory() != null &&
+                            post.getCategory().stream().anyMatch(cat -> category.contains(cat)))
+                    .collect(Collectors.toList());
+        }
 
         Set<Post> set = new HashSet<>();
         set.addAll(postRepository.searchByKeyword(q));
