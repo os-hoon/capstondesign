@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
         String token = tokenProvider.generateJwtToken(new UserRequestDTO.userInfoDTO(newUser.getId()));
 
-        return new UserResponseDTO.successLoginDTO(token, newUser.getRegion(), newUser.getNickname());
+        return new UserResponseDTO.successLoginDTO(token, newUser.getRegion(), newUser.getName());
     }
 
     @Override
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
         if(checkPassword(request.getPassword(), user)) {
             String token = tokenProvider.generateJwtToken(new UserRequestDTO.userInfoDTO(user.getId()));
 
-            return new UserResponseDTO.successLoginDTO(token, user.getRegion(), user.getNickname());
+            return new UserResponseDTO.successLoginDTO(token, user.getRegion(), user.getName());
         }
         throw new UserErrorHandler(ErrorCode._LOGIN_FAILURE);
     }
@@ -127,7 +127,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO.successLoginDTO loginAuth() {
         User user = getLoggedInUser();
-        return new UserResponseDTO.successLoginDTO(user.getRegion(), user.getNickname());
+        return new UserResponseDTO.successLoginDTO(user.getRegion(), user.getName());
     }
 
     @Override

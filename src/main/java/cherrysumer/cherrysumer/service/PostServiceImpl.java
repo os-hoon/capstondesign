@@ -130,7 +130,7 @@ public class PostServiceImpl implements PostService{
                 .map(p -> convertPost(p, user))
                 .collect(Collectors.toList());
 
-        return new PostResponseDTO.postListDTO(user.getRegion(), user.getNickname(), list);
+        return new PostResponseDTO.postListDTO(user.getRegion(), user.getName(), list);
     }
 
     private List<Post> filterPost(User user, List<Post> posts, String filter) {
