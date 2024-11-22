@@ -43,27 +43,24 @@ public class MyPageController {
 
     // 프로필 조회
     @GetMapping("/profile")
-    public ApiResponse<ProfileDTO> getProfile(@AuthenticationPrincipal User user) {
-        Long userId = Long.parseLong(user.getUsername());
-        ProfileDTO profile = myPageService.getProfile(userId);
+    public ApiResponse<ProfileDTO> getProfile() {
+        ProfileDTO profile = myPageService.getProfile();
         return ApiResponse.onSuccess(profile);
     }
 
     // 프로필 수정
     @PostMapping("/profile/modify")
-    public ApiResponse<?> modifyProfile(@AuthenticationPrincipal User user,
-                                        @RequestPart(value = "dto") ProfileDTO profileDTO,
+    public ApiResponse<ProfileDTO> modifyProfile(@RequestPart(value = "dto") ProfileDTO profileDTO,
                                         @RequestPart("file") MultipartFile file) {
-        Long userId = Long.parseLong(user.getUsername());
-        myPageService.modifyProfile(userId, profileDTO,file);
-        return ApiResponse.onSuccess("프로필이 성공적으로 수정되었습니다.");
+
+        ProfileDTO updatedProfile =  myPageService.modifyProfile(profileDTO,file);
+        return ApiResponse.onSuccess(updatedProfile);
     }
 
     // 내 동네 설정
     @PostMapping("/region")
-    public ApiResponse<?> setRegion(@AuthenticationPrincipal User user, @RequestBody RegionDTO regionDTO) throws ParseException {
-        Long userId = Long.parseLong(user.getUsername());
-        myPageService.setRegion(userId, regionDTO);
+    public ApiResponse<?> setRegion(@RequestBody RegionDTO regionDTO) throws ParseException {
+        myPageService.setRegion(regionDTO);
         return ApiResponse.onSuccess("동네가 성공적으로 설정되었습니다.");
     }
 
