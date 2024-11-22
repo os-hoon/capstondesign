@@ -58,9 +58,10 @@ public class MyPageServiceImpl implements MyPageService {
                 user.setProfileImageUrl(filePath);
             };
             userRepository.save(user);
+            String imageUrl = user.getProfileImageUrl() != null ? "/image/view/" + user.getProfileImageUrl() : null;
 
             // 수정된 정보로 ProfileDTO 생성하여 반환
-            return new ProfileDTO(user.getName(), user.getNickname(), user.getEmail(), user.getRegion(), user.getProfileImageUrl());
+            return new ProfileDTO(user.getName(), user.getNickname(), user.getEmail(), user.getRegion(), imageUrl);
 
 
         } catch (IOException e) {
