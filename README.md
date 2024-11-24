@@ -25,6 +25,11 @@
 ------------
 ### App 동작화면
 
-
 ### [화면 예시(설명), 디자인 (클릭하시면 피그마로 넘어갑니다.)](https://www.figma.com/design/ftXJAYs5Xt0QXzNzckDbkb/Untitled)
 
+
+
+📃포스터
+------------
+
+![KakaoTalk_20241124_223510043](https://github.com/user-attachments/assets/a14b678a-5f7a-4cdb-8b15-34c1104dcb00)
