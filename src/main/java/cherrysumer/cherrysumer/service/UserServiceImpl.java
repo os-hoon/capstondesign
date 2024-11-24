@@ -139,6 +139,12 @@ public class UserServiceImpl implements UserService {
         return user.getCategory();
     }
 
+    @Override
+    public void deleteUser() {
+        User user = getLoggedInUser();
+
+    }
+
     // 비밀번호 변경
     @Override
     public void changePw(UserRequestDTO.changePwDTO request) {

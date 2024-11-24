@@ -36,4 +36,6 @@ public interface UserService {
 
     List<String> updateCategory(UserRequestDTO.categoryDTO request);
 
+    void deleteUser();
+
 }

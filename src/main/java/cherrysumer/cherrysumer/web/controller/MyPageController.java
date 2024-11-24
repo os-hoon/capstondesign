@@ -96,4 +96,10 @@ public class MyPageController {
     public ApiResponse<?> changeCategory(@RequestBody UserRequestDTO.categoryDTO request) {
         return ApiResponse.onSuccess(userService.updateCategory(request));
     }
+
+    // 회원 탈퇴
+    @DeleteMapping("/deleteAccount")
+    public ApiResponse<?> deleteUser() {
+        return ApiResponse.onSuccess("회원 탈퇴가 완료되었습니다.");
+    }
 }
