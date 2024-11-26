@@ -246,8 +246,10 @@ public class PostResponseDTO {
         private boolean isClosed; // 마감 여부
         private boolean isAuthor; // 작성 여부
         private boolean isJoin; // 참여 가능 여부
+        
+        private boolean isChatRoom; // 채팅방 생성 여부
 
-        public detailPostDTO(Post p, String upload, int likes, boolean like_status, boolean isAuthor, boolean isJoin) {
+        public detailPostDTO(Post p, String upload, int likes, boolean like_status, boolean isAuthor, boolean isJoin, boolean isChatRoom) {
             this.postId = p.getId();
             this.writer = p.getUser().getNickname();
             this.writerId = p.getUser().getId();
@@ -269,6 +271,8 @@ public class PostResponseDTO {
             this.isClosed = p.isClosed();
             this.isAuthor = isAuthor;
             this.isJoin = isJoin;
+
+            this.isChatRoom = isChatRoom;
 
             this.imagefiles = (p.getPostImage() == null || p.getPostImage().isEmpty()) ?
                     null : p.getPostImage().stream()

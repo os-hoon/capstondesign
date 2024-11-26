@@ -8,6 +8,7 @@ import cherrysumer.cherrysumer.exception.BaseException;
 import cherrysumer.cherrysumer.exception.ErrorCode;
 import cherrysumer.cherrysumer.exception.handler.PostErrorHandler;
 import cherrysumer.cherrysumer.exception.handler.UserErrorHandler;
+import cherrysumer.cherrysumer.repository.ChatRoomMemberRepository;
 import cherrysumer.cherrysumer.repository.ParticipateRepository;
 import cherrysumer.cherrysumer.repository.PostLikesRepository;
 import cherrysumer.cherrysumer.repository.PostRepository;
@@ -35,6 +36,7 @@ public class PostServiceImpl implements PostService{
     private final ParticipateRepository participateRepository;
     private final ParticipateService participateService;
     private final ImageUploadService imageUploadService;
+    private final ChatRoomMemberRepository chatRoomMemberRepository;
 
     // 게시글 저장
     @Override
@@ -429,7 +431,9 @@ public class PostServiceImpl implements PostService{
             postRepository.save(p);
         }
 
-        return new PostResponseDTO.detailPostDTO(p, upload, likes, status, isAuthor, isJoin);
+        boolean isChatRoom = chatRoomMemberRepository.existsByPostAndUser(p, u);
+
+        return new PostResponseDTO.detailPostDTO(p, upload, likes, status, isAuthor, isJoin, isChatRoom);
     }
 
     private PostResponseDTO.participateDTO convertRecruitPost(Post p, User u) {

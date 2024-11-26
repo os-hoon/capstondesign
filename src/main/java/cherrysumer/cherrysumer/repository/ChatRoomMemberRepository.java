@@ -1,6 +1,7 @@
 package cherrysumer.cherrysumer.repository;
 
 import cherrysumer.cherrysumer.domain.ChatRoomMember;
+import cherrysumer.cherrysumer.domain.Post;
 import cherrysumer.cherrysumer.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,4 +15,6 @@ public interface ChatRoomMemberRepository extends JpaRepository<ChatRoomMember, 
 
     // 특정 chatRoomId로 ChatRoomMember 조회
     List<ChatRoomMember> findByChatRoomId(String chatRoomId);
+
+    boolean existsByPostAndUser(Post post, User user);
 }
