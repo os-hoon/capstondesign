@@ -280,8 +280,10 @@ public class PostResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class postDataDTO {
         private Long postId;
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         private String imageUrl;
         private String title;
         private String productname;
@@ -289,8 +291,9 @@ public class PostResponseDTO {
         private int price;
 
         private boolean isClosed; // 마감 여부
+        private Boolean like_status; // 좋아요 여부
 
-        public postDataDTO(Post p) {
+        public postDataDTO(Post p, Boolean status) {
             this.postId = p.getId();
             this.title = p.getTitle();
             this.productname = p.getProductname();
@@ -299,6 +302,7 @@ public class PostResponseDTO {
             this.imageUrl = (p.getPostImage() == null || p.getPostImage().isEmpty()) ?
                     null : "/image/view/" + p.getPostImage().get(0).getImagepath();
             this.isClosed = p.isClosed();
+            this.like_status = status;
         }
     }
 }

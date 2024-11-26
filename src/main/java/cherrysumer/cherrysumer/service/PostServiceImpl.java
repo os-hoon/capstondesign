@@ -327,7 +327,7 @@ public class PostServiceImpl implements PostService{
         User user = userService.getLoggedInUser();
         List<Post> posts = getRecruitPosts(user);
         List<PostResponseDTO.postDataDTO> list = posts.stream()
-                .map(p -> convertPostDataDTO(p))
+                .map(p -> convertPostDataDTO(p, null))
                 .collect(Collectors.toList());
         return list;
     }
@@ -345,15 +345,15 @@ public class PostServiceImpl implements PostService{
     // 관심목록 게시글
     @Override
     public List<PostResponseDTO.postDataDTO> postLikeList() {
-        List<Post> posts = getLikePosts();
+        User user = userService.getLoggedInUser();
+        List<Post> posts = getLikePosts(user);
         List<PostResponseDTO.postDataDTO> list = posts.stream()
-                .map(p -> convertPostDataDTO(p))
+                .map(p -> convertPostDataDTO(p, likesRepository.existsByPostAndUser(p, user)))
                 .collect(Collectors.toList());
         return list;
     }
 
-    private List<Post> getLikePosts() {
-        User user = userService.getLoggedInUser();
+    private List<Post> getLikePosts(User user) {
         List<PostLikes> likes = likesRepository.findAllByUser(user);
 
         return likes.stream()
@@ -441,12 +441,12 @@ public class PostServiceImpl implements PostService{
         return post;
     }
 
-    private PostResponseDTO.postDataDTO convertPostDataDTO(Post p) {
+    private PostResponseDTO.postDataDTO convertPostDataDTO(Post p, Boolean status) {
         if(!p.isClosed() && (p.getDate().isBefore(LocalDateTime.now()))) {
             participateService.closeRecruit(p);
             p.setClosed(true);
             postRepository.save(p);
         }
-        return new PostResponseDTO.postDataDTO(p);
+        return new PostResponseDTO.postDataDTO(p, status);
     }
 }
