@@ -69,7 +69,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                             .userNickname(member.getUser().getNickname())
                             .postId(member.getPost().getId())
                             .userProfileImageUrl(member.getUser().getProfileImageUrl())
-                            .lastMessage(member.getChatRoom().getLastChatMesg().getMessage())
+                            .lastMessage(member.getChatRoom().getLastChatMesg().getMessage() != null ? member.getChatRoom().getLastChatMesg().getMessage() : " ")
                             .updatedAt(member.getChatRoom().getLastChatMesg().getCreatedAt())
                             .status(participate != null ? participate.getStatus() : "unknown")
                             .build();
