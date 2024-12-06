@@ -15,4 +15,6 @@ public interface MyPageService {
 
     Point convertPoint(String longitude, String latitude) throws ParseException;
 
+    void deleteUser();
+
 }

@@ -100,6 +100,7 @@ public class MyPageController {
     // 회원 탈퇴
     @DeleteMapping("/deleteAccount")
     public ApiResponse<?> deleteUser() {
+        myPageService.deleteUser();
         return ApiResponse.onSuccess("회원 탈퇴가 완료되었습니다.");
     }
 }

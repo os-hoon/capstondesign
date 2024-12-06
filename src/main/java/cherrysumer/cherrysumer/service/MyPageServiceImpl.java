@@ -1,9 +1,9 @@
 package cherrysumer.cherrysumer.service;
 
-import cherrysumer.cherrysumer.domain.User;
+import cherrysumer.cherrysumer.domain.*;
 import cherrysumer.cherrysumer.exception.BaseException;
 import cherrysumer.cherrysumer.exception.ErrorCode;
-import cherrysumer.cherrysumer.repository.UserRepository;
+import cherrysumer.cherrysumer.repository.*;
 import cherrysumer.cherrysumer.util.jwt.TokenProvider;
 import cherrysumer.cherrysumer.web.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +25,10 @@ public class MyPageServiceImpl implements MyPageService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final ImageUploadService imageUploadService;
+    private final InventoryRepository inventoryRepository;
+    private final ChatRoomMemberRepository chatRoomMemberRepository;
+    private final ChatRoomRepository chatRoomRepository;
+    private final ChatMessageRepository chatMessageRepository;
 
     @Override
     public ProfileDTO.Extended getProfile() {
@@ -98,6 +105,47 @@ public class MyPageServiceImpl implements MyPageService {
         Point point = (Point) new WKTReader().read(pointWKT);
 
         return point;
+    }
+
+    @Override
+    public void deleteUser(){
+        User user = userService.getLoggedInUser();
+
+        List<Inventory> inventories= inventoryRepository.findAllByUserId(user.getId());
+
+
+        inventoryRepository.deleteAll(inventories);
+
+
+        // 로그인한 사용자의 ChatRoomMember 정보 가져오기
+        List<ChatRoomMember> userChatRoomMembers = chatRoomMemberRepository.findByUser(user);
+
+        List<String> chatRoomIds = userChatRoomMembers.stream()
+                .map(member -> member.getChatRoom().getId())
+                .distinct() // 중복 제거
+                .toList();
+
+
+        for (String chatRoomId: chatRoomIds) {
+
+            // 2. 해당 ChatRoom에 포함된 모든 ChatRoomMember 삭제
+            List<ChatRoomMember> chatRoomMembers = chatRoomMemberRepository.findByChatRoomId(chatRoomId);
+            chatRoomMemberRepository.deleteAll(chatRoomMembers);
+
+            // 3. ChatRoom 삭제
+            Optional<ChatRoom> chatRoomOptional = chatRoomRepository.findById(chatRoomId);
+            if (chatRoomOptional.isPresent()) {
+                ChatRoom chatRoom = chatRoomOptional.get();
+                chatRoomRepository.delete(chatRoom);
+            }
+
+            // 1. 해당 ChatRoom에 포함된 모든 ChatMessage 삭제
+            List<ChatMessage> chatMessages = chatMessageRepository.findAllByRoomId(chatRoomId);
+            chatMessageRepository.deleteAll(chatMessages);
+
+        }
+
+
     }
 
 
