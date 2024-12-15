@@ -47,7 +47,8 @@
 
 ### [화면 예시(설명), 디자인 (클릭하시면 피그마로 넘어갑니다.)](https://www.figma.com/design/ftXJAYs5Xt0QXzNzckDbkb/Untitled)
 
-### [Notion 페이지로 이동](https://www.notion.so/115c5a2810d680cdaccfe45af7bdce67)
+
+### [![image](https://github.com/user-attachments/assets/8d34244e-00bc-46c8-a51a-9517dd960cd2)](https://www.notion.so/115c5a2810d680cdaccfe45af7bdce67)  ⭠⭠ 클릭시 노션 페이지로 이동
 
 
 
