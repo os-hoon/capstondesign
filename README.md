@@ -22,9 +22,23 @@
 
 🛠️기술스택 및 개발환경
 ------------
-![aXfcETIt_400x400](https://github.com/user-attachments/assets/9e3f515c-3926-45d7-bca3-f471082a6fc1)
+- **프론트엔드**: android studio
+
 ![la_D110104](https://github.com/user-attachments/assets/9cb16c9a-12aa-4ecb-81bd-c63abd1d1408)
+
+- **백엔드**: springboot
+
 ![img](https://github.com/user-attachments/assets/ace6c952-788d-4d40-b211-3017bf19ddc5)
+
+- **데이터베이스**: MySQL
+
+![image](https://github.com/user-attachments/assets/02cb992c-8c88-494c-88eb-87e1e88505bf)
+
+- **웹서버 배포**: AWS
+
+![aXfcETIt_400x400](https://github.com/user-attachments/assets/9e3f515c-3926-45d7-bca3-f471082a6fc1)
+
+
 
 
 🗂️결과물
@@ -32,6 +46,8 @@
 ### App 동작화면
 
 ### [화면 예시(설명), 디자인 (클릭하시면 피그마로 넘어갑니다.)](https://www.figma.com/design/ftXJAYs5Xt0QXzNzckDbkb/Untitled)
+
+### [Notion 페이지로 이동](https://www.notion.so/115c5a2810d680cdaccfe45af7bdce67)
 
 
 
