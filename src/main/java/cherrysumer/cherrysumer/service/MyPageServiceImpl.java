@@ -123,7 +123,7 @@ public class MyPageServiceImpl implements MyPageService {
 
 
         // 로그인한 사용자의 ChatRoomMember 정보 가져오기
-        /*List<ChatRoomMember> userChatRoomMembers = chatRoomMemberRepository.findByUser(user);
+        List<ChatRoomMember> userChatRoomMembers = chatRoomMemberRepository.findByUser(user);
 
         List<String> chatRoomIds = userChatRoomMembers.stream()
                 .map(member -> member.getChatRoom().getId())
@@ -148,7 +148,7 @@ public class MyPageServiceImpl implements MyPageService {
             List<ChatMessage> chatMessages = chatMessageRepository.findAllByRoomId(chatRoomId);
             chatMessageRepository.deleteAll(chatMessages);
 
-        }*/
+        }
 
         // 좋아요한 게시글 삭제
         likesRepository.deleteAlllikesUser(user);
