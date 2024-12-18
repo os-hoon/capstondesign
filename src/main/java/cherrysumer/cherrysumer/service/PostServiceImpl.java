@@ -378,8 +378,8 @@ public class PostServiceImpl implements PostService{
         }
 
         Set<Post> set = new HashSet<>();
-        set.addAll(postRepository.searchByKeyword(q));
-        set.addAll(postRepository.searchByKeywordNative(q));
+        set.addAll(postRepository.searchByKeyword(q, user.getRegionCode()));
+        set.addAll(postRepository.searchByKeywordNative(q, user.getRegionCode()));
 
         categoryPosts.retainAll(set);
 

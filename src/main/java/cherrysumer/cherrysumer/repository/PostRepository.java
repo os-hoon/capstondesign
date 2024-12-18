@@ -15,11 +15,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query(value = "SELECT * FROM post p WHERE p.title LIKE %:q% OR JSON_CONTAINS(p.categories, :q)", nativeQuery = true)
     List<Post> findAllBySearchPost(@Param("q") String query);
 
-    @Query("SELECT p FROM Post p WHERE p.title LIKE %:keyword% OR p.place LIKE %:keyword% OR p.content LIKE %:keyword% OR p.productname LIKE %:keyword%")
-    List<Post> searchByKeyword(@Param("keyword") String keyword);
+    @Query("SELECT p FROM Post p WHERE p.regionCode = :regionCode AND p.title LIKE %:keyword% OR p.place LIKE %:keyword% OR p.content LIKE %:keyword% OR p.productname LIKE %:keyword%")
+    List<Post> searchByKeyword(@Param("keyword") String keyword, @Param("regionCode") String regionCode);
 
-    @Query(value = "SELECT * FROM post p WHERE JSON_CONTAINS(p.detailed_category, JSON_QUOTE(:keyword)) OR JSON_CONTAINS(p.category, JSON_QUOTE(:keyword))", nativeQuery = true)
-    List<Post> searchByKeywordNative(@Param("keyword") String keyword);
+    @Query(value = "SELECT * FROM post p WHERE p.region_code = :regionCode AND JSON_CONTAINS(p.detailed_category, JSON_QUOTE(:keyword)) OR JSON_CONTAINS(p.category, JSON_QUOTE(:keyword))", nativeQuery = true)
+    List<Post> searchByKeywordNative(@Param("keyword") String keyword, @Param("regionCode") String regionCode);
 
     List<Post> findAllByRegionCode(String regionCode);
 
