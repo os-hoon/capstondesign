@@ -197,6 +197,7 @@ public class PostResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class participateUserDTO {
+        private Long myId;
         private Long userId;
         private String profileImageUrl;
         private Long postId;
@@ -204,7 +205,8 @@ public class PostResponseDTO {
         private String region;
         private String isConfirmed;
 
-        public participateUserDTO(User u, Post p, String isConfirmed) {
+        public participateUserDTO(Long myId, User u, Post p, String isConfirmed) {
+            this.myId = myId;
             this.userId = u.getId();
             this.profileImageUrl = (u.getProfileImageUrl() == null || u.getProfileImageUrl().isEmpty()) ?
                     null : "/image/view/" + u.getProfileImageUrl();

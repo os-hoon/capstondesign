@@ -41,4 +41,9 @@ public interface ParticipateRepository extends JpaRepository<Participate, Long> 
     @Modifying
     @Query("DELETE FROM Participate p where p.post = :post")
     void deleteAllparticipate(@Param("post") Post post);
+
+    @Modifying
+    @Query("DELETE FROM Participate p where p.user = :user")
+    void deleteAllUser(@Param("user") User user);
+
 }

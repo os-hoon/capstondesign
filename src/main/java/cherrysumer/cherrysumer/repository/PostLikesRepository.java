@@ -23,4 +23,8 @@ public interface PostLikesRepository extends JpaRepository<PostLikes, Long> {
     @Modifying
     @Query("DELETE FROM PostLikes p where p.post = :post")
     void deleteAlllikes(@Param("post") Post post);
+
+    @Modifying
+    @Query("DELETE FROM PostLikes p where p.user = :user")
+    void deleteAlllikesUser(@Param("user") User user);
 }

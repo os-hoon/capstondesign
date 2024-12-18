@@ -52,22 +52,22 @@ public class ParticipateServiceImpl implements ParticipateService{
     // 참여 신청자 목록 조회
     @Override
     public List<PostResponseDTO.participateUserDTO> participateList(Long postId, String filter) {
+        User user = userService.getLoggedInUser();
         List<Participate> participates;
         if(filter.equals("전체") || filter.equals("승인") || filter.equals(("거절"))) {
-            participates = participate(postId, filter);
+            participates = participate(user, postId, filter);
         } else {
             throw new BaseException(ErrorCode._BAD_REQUEST);
         }
 
         List<PostResponseDTO.participateUserDTO> list = participates.stream()
-                .map((Participate p) -> convertUser(p))
+                .map((Participate p) -> convertUser(user.getId(), p))
                 .collect(Collectors.toList());
 
         return list;
     }
 
-    public List<Participate> participate(Long postId, String filter) {
-        User user = userService.getLoggedInUser();
+    public List<Participate> participate(User user, Long postId, String filter) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostErrorHandler(ErrorCode._POST_NOT_FOUND));
 
@@ -150,9 +150,9 @@ public class ParticipateServiceImpl implements ParticipateService{
         return post;
     }
 
-    private PostResponseDTO.participateUserDTO convertUser(Participate p) {
+    private PostResponseDTO.participateUserDTO convertUser(Long myId, Participate p) {
         PostResponseDTO.participateUserDTO user =
-                new PostResponseDTO.participateUserDTO(p.getUser(), p.getPost(), p.getStatus());
+                new PostResponseDTO.participateUserDTO(myId, p.getUser(), p.getPost(), p.getStatus());
         return user;
     }
 }

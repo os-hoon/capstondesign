@@ -11,6 +11,7 @@ import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -29,6 +30,9 @@ public class MyPageServiceImpl implements MyPageService {
     private final ChatRoomMemberRepository chatRoomMemberRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
+    private final PostLikesRepository likesRepository;
+    private final ParticipateRepository participateRepository;
+    private final PostRepository postRepository;
 
     @Override
     public ProfileDTO.Extended getProfile() {
@@ -108,6 +112,7 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(){
         User user = userService.getLoggedInUser();
 
@@ -118,7 +123,7 @@ public class MyPageServiceImpl implements MyPageService {
 
 
         // 로그인한 사용자의 ChatRoomMember 정보 가져오기
-        List<ChatRoomMember> userChatRoomMembers = chatRoomMemberRepository.findByUser(user);
+        /*List<ChatRoomMember> userChatRoomMembers = chatRoomMemberRepository.findByUser(user);
 
         List<String> chatRoomIds = userChatRoomMembers.stream()
                 .map(member -> member.getChatRoom().getId())
@@ -143,8 +148,19 @@ public class MyPageServiceImpl implements MyPageService {
             List<ChatMessage> chatMessages = chatMessageRepository.findAllByRoomId(chatRoomId);
             chatMessageRepository.deleteAll(chatMessages);
 
-        }
+        }*/
 
+        // 좋아요한 게시글 삭제
+        likesRepository.deleteAlllikesUser(user);
+
+        // 참여한 게시글 삭제
+        participateRepository.deleteAllUser(user);
+
+        // 게시글 삭제
+        postRepository.deleteAllByUser(user);
+
+        // 계정 삭제
+        userRepository.delete(user);
 
     }
 
