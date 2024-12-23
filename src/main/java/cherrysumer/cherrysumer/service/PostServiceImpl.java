@@ -58,7 +58,7 @@ public class PostServiceImpl implements PostService{
         post.setCategory(request.getCategory());
         post.setPrice(request.getPrice());
         post.setPlace(request.getPlace());
-        post.setDetailed_category(request.getDetailed_category());
+        post.setDetailed_category(request.getDetail_category());
         post.setContent(request.getContent());
         post.setRegion(user.getRegion());
         post.setRegionCode(user.getRegionCode());
@@ -207,7 +207,7 @@ public class PostServiceImpl implements PostService{
         post.setCategory(request.getCategory());
         post.setPrice(request.getPrice());
         post.setPlace(request.getPlace());
-        post.setDetailed_category(request.getDetailed_category());
+        post.setDetailed_category(request.getDetail_category());
         post.setContent(request.getContent());
         //post.setRegionCode(user.getRegionCode());
         //post.setClosed(false);

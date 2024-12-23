@@ -36,7 +36,7 @@ public class PostRequestDTO {
 
         private List<String> category;
 
-        private List<String> detailed_category;
+        private List<String> detail_category;
 
         private String longitude; // 경도
 
