@@ -60,7 +60,7 @@ public class PostController {
     }
 
     // 게시글 수정
-    @PutMapping("")
+    @PostMapping("/edit")
     public ApiResponse<?> updatePost(@Valid @RequestPart(value = "request") PostRequestDTO.postDTO request,
                                      @RequestPart("file") List<MultipartFile> imagefile) throws ParseException, IOException {
         return ApiResponse.onSuccess(postService.updatePost(request, imagefile));
