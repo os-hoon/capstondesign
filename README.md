@@ -5,6 +5,8 @@
 
 🤷소개
 ------------
+### 진행기간
+>**2024-07-11 ~ 2024-12-23**
 
 ### App의 목적
 - 1인 가구 및 자취하는 사람들이 과일, 채소와 같은 신선식품 구매 시 유통기한 때문에 다 사용하지 못하고 버리게 되는 경우가 많다는 이야기를 듣게 되었습니다. 그래서 이 문제를 해결하기 위한 방법에 대해 팀원들과 논의를 해보았고, 공동 구매와 재고 관리 통합 서비스인 cherrysumer를 개발하게 되었습니다.
@@ -17,8 +19,7 @@
 - 사용자의 편의성 극대화
 - 경제적 부담 완화를 통한 효율적인 소비 문화 장착
 - 자원 낭비 감소와 사회적 연결망 강화를 통한 지속 가능한 삶의 방식 지원
-### 일정
-- **2024-07-11 ~ 2024-12-23**
+<br><br>
 
 🛠️기술스택 및 개발환경
 ------------
@@ -32,25 +33,22 @@
 
 - **데이터베이스**: MySQL
 
-![image](https://github.com/user-attachments/assets/02cb992c-8c88-494c-88eb-87e1e88505bf)
+<img src="https://github.com/user-attachments/assets/02cb992c-8c88-494c-88eb-87e1e88505bf" width="350" height="200">
 
 - **웹서버 배포**: AWS
 
 ![aXfcETIt_400x400](https://github.com/user-attachments/assets/9e3f515c-3926-45d7-bca3-f471082a6fc1)
-
-
-
+<br><br>
 
 🗂️결과물
 ------------
 ### App 동작화면
 
-### [화면 예시(설명), 디자인 (클릭하시면 피그마로 넘어갑니다.)](https://www.figma.com/design/ftXJAYs5Xt0QXzNzckDbkb/Untitled)
+#### [✏화면 예시(디자인)](https://www.figma.com/design/ftXJAYs5Xt0QXzNzckDbkb/Untitled)
 
 
-### [![image](https://github.com/user-attachments/assets/8d34244e-00bc-46c8-a51a-9517dd960cd2)](https://www.notion.so/115c5a2810d680cdaccfe45af7bdce67)  ⭠⭠ 클릭시 노션 페이지로 이동
-
-
+#### [<img src="https://github.com/user-attachments/assets/8d34244e-00bc-46c8-a51a-9517dd960cd2" width="20" height="20"/> 개발 노션](https://www.notion.so/115c5a2810d680cdaccfe45af7bdce67)
+<br><br>
 
 📃포스터
 ------------
