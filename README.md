@@ -53,4 +53,5 @@
 📃포스터
 ------------
 
-![KakaoTalk_20241124_223510043](https://github.com/user-attachments/assets/a14b678a-5f7a-4cdb-8b15-34c1104dcb00)
+<img src="https://github.com/user-attachments/assets/a14b678a-5f7a-4cdb-8b15-34c1104dcb00" width="1000" height="1300">
+
