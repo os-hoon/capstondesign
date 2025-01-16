@@ -23,21 +23,15 @@
 
 🛠️기술스택 및 개발환경
 ------------
-- **프론트엔드**: android studio
+- **프론트엔드**: <img src="https://img.shields.io/badge/AndroidStudio-3DDC84?&style=flat-square&logo=androidstudio&logoColor=white" >
 
-![la_D110104](https://github.com/user-attachments/assets/9cb16c9a-12aa-4ecb-81bd-c63abd1d1408)
+- **백엔드**: <img src="https://img.shields.io/badge/SpringBoot-6DB33F?&style=flat-square&logo=springboot&logoColor=white">
 
-- **백엔드**: springboot
+- **데이터베이스**: <img src="https://img.shields.io/badge/mysql-4479A1?&style=flat-square&logo=mysql&logoColor=white" height="27">
 
-![img](https://github.com/user-attachments/assets/ace6c952-788d-4d40-b211-3017bf19ddc5)
-
-- **데이터베이스**: MySQL
-
-<img src="https://github.com/user-attachments/assets/02cb992c-8c88-494c-88eb-87e1e88505bf" width="350" height="200">
-
-- **웹서버 배포**: AWS
-
-![aXfcETIt_400x400](https://github.com/user-attachments/assets/9e3f515c-3926-45d7-bca3-f471082a6fc1)
+- **웹서버 배포**: <img src="https://img.shields.io/badge/AmazonWebServices-232F3E?&style=flat-square&logo=amazonwebservices&logoColor=white"></a>
+<img src="https://img.shields.io/badge/AmazonEC2-FF9900?&style=flat-square&logo=amazonec2&logoColor=white"></a>
+<img src="https://img.shields.io/badge/AmazonrRDS-527FFF?&style=flat-square&logo=amazonrds&logoColor=white" ></a>
 <br><br>
 
 🗂️결과물
