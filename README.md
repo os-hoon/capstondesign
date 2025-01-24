@@ -28,6 +28,7 @@
 
 <img src="https://github.com/user-attachments/assets/56530a8e-3e2c-4e10-8a32-52c82371034e" width="600">
 
+- ```재고 등록``` 버튼을 누르시면, 해당 상품의 정보를 가지고 ```재고 등록 페이지```로 이동할 수 있습니다.
 <br><br>
 
 ```공동구매 모집```
